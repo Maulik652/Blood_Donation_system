@@ -1,0 +1,153 @@
+<div class="register-page">
+  <div class="container">
+    <div class="register-container">
+      <div class="register-card">
+        <h2>Register</h2>
+        <p class="subtitle">Create your account to get started</p>
+
+        <div *ngIf="errorMessage" class="alert alert-error">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                formControlName="name"
+                [class.input-invalid]="f.name.touched && f.name.invalid"
+                placeholder="Enter your full name"
+              />
+              <small class="field-error" *ngIf="f.name.touched && f.name.errors?.['required']">Name is required.</small>
+              <small class="field-error" *ngIf="f.name.touched && f.name.errors?.['minlength']">Name must have at least 2 characters.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                formControlName="email"
+                [class.input-invalid]="f.email.touched && f.email.invalid"
+                placeholder="Enter your email"
+              />
+              <small class="field-error" *ngIf="f.email.touched && f.email.errors?.['required']">Email is required.</small>
+              <small class="field-error" *ngIf="f.email.touched && f.email.errors?.['email']">Enter a valid email address.</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                formControlName="password"
+                [class.input-invalid]="f.password.touched && f.password.invalid"
+                placeholder="Minimum 8 characters"
+              />
+              <small class="field-error" *ngIf="f.password.touched && f.password.errors?.['required']">Password is required.</small>
+              <small class="field-error" *ngIf="f.password.touched && f.password.errors?.['minlength']">Password must be at least 8 characters.</small>
+              <small class="field-error" *ngIf="f.password.touched && f.password.errors?.['pattern']">Use at least one letter and one number.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input
+                type="tel"
+                id="phone"
+                class="form-control"
+                formControlName="phone"
+                [class.input-invalid]="f.phone.touched && f.phone.invalid"
+                placeholder="Enter phone number"
+              />
+              <small class="field-error" *ngIf="f.phone.touched && f.phone.errors?.['required']">Phone is required.</small>
+              <small class="field-error" *ngIf="f.phone.touched && f.phone.errors?.['pattern']">Enter a valid phone number.</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="age">Age *</label>
+              <input
+                type="number"
+                id="age"
+                class="form-control"
+                formControlName="age"
+                [class.input-invalid]="f.age.touched && f.age.invalid"
+                placeholder="Age (18-65)"
+              />
+              <small class="field-error" *ngIf="f.age.touched && f.age.errors?.['required']">Age is required.</small>
+              <small class="field-error" *ngIf="f.age.touched && (f.age.errors?.['min'] || f.age.errors?.['max'])">Age must be between 18 and 65.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="bloodGroup">Blood Group *</label>
+              <select
+                id="bloodGroup"
+                class="form-control"
+                formControlName="bloodGroup"
+                [class.input-invalid]="f.bloodGroup.touched && f.bloodGroup.invalid"
+              >
+                <option value="">Select Blood Group</option>
+                <option *ngFor="let group of bloodGroups" [value]="group">
+                  {{ group }}
+                </option>
+              </select>
+              <small class="field-error" *ngIf="f.bloodGroup.touched && f.bloodGroup.errors?.['required']">Blood group is required.</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input
+                type="text"
+                id="location"
+                class="form-control"
+                formControlName="location"
+                [class.input-invalid]="f.location.touched && f.location.invalid"
+                placeholder="Enter your location"
+              />
+              <small class="field-error" *ngIf="f.location.touched && f.location.errors?.['required']">Location is required.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="role">Register As *</label>
+              <select
+                id="role"
+                class="form-control"
+                formControlName="role"
+                [class.input-invalid]="f.role.touched && f.role.invalid"
+              >
+                <option value="user">Donor</option>
+                <option value="hospital">Hospital</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            [disabled]="registerForm.invalid || isLoading"
+          >
+            {{ isLoading ? 'Registering...' : 'Register' }}
+          </button>
+        </form>
+
+        <div class="register-footer">
+          <p>Already have an account? <a routerLink="/login">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

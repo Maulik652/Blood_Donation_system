@@ -1,0 +1,249 @@
+.home-page {
+  color: var(--text-primary);
+}
+
+section {
+  padding: 78px 0;
+}
+
+.hero {
+  background: #fff;
+}
+
+.hero-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 42px;
+}
+
+.hero-left h1 {
+  font-size: clamp(2rem, 4.3vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-left p {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 620px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.primary-btn,
+.secondary-btn {
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.92rem;
+  padding: 11px 22px;
+  transition: all var(--transition-fast);
+}
+
+.primary-btn {
+  background: var(--primary-500);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(239, 68, 68, 0.22);
+}
+
+.primary-btn:hover {
+  background: var(--primary-600);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(220, 38, 38, 0.24);
+}
+
+.secondary-btn {
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  background: #fff;
+}
+
+.secondary-btn:hover {
+  background: var(--bg-soft);
+}
+
+.hero-right img {
+  width: min(390px, 100%);
+  filter: drop-shadow(0 24px 28px rgba(17, 24, 39, 0.08));
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  margin-bottom: 36px;
+}
+
+.feature-grid,
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.feature-card,
+.event-card,
+.stat-box {
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-medium);
+}
+
+.feature-card,
+.event-card {
+  padding: 24px;
+}
+
+.feature-card:hover,
+.event-card:hover,
+.stat-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(220, 38, 38, 0.18);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-card .icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.feature-card h3,
+.event-card h3 {
+  font-size: 1.05rem;
+}
+
+.feature-card p,
+.event-card p,
+.event-info {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.stats {
+  background: var(--bg-soft);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-box {
+  text-align: center;
+  padding: 24px 14px;
+}
+
+.stat-box h3 {
+  color: var(--primary-600);
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.stat-box p {
+  margin-top: 6px;
+  color: var(--text-secondary);
+}
+
+.blood-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 10px;
+  margin: 26px 0;
+}
+
+.blood {
+  background: var(--primary-50);
+  color: var(--primary-600);
+  text-align: center;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: 1px solid #fecaca;
+  transition: all var(--transition-fast);
+}
+
+.blood:hover {
+  transform: translateY(-1px);
+  background: #fff;
+}
+
+.urgent,
+.center {
+  text-align: center;
+}
+
+.urgent {
+  color: var(--text-secondary);
+}
+
+.cta {
+  background: #fff;
+}
+
+.cta-box {
+  text-align: center;
+}
+
+.cta-box h2 {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.cta-box p {
+  margin-top: 6px;
+  color: var(--text-secondary);
+}
+
+.primary-btn.big {
+  margin-top: 18px;
+  display: inline-flex;
+  padding: 12px 28px;
+}
+
+@media (max-width: 992px) {
+  .hero-wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .feature-grid,
+  .event-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .blood-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  section {
+    padding: 56px 0;
+  }
+
+  .feature-grid,
+  .event-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blood-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

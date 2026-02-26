@@ -1,0 +1,396 @@
+<div class="home-page">
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="container hero-wrapper">
+
+<div class="hero-left">
+
+<h1>Donate Blood. Save Lives.</h1>
+
+<p>
+
+Blood donation is a simple act that saves thousands of lives every day.
+Join BloodConnect and become a life saver today.
+
+</p>
+
+<div class="hero-buttons">
+
+<a routerLink="/register"
+class="primary-btn">
+
+Become Donor
+
+</a>
+
+
+<a routerLink="/events"
+class="secondary-btn">
+
+View Camps
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div class="hero-right">
+
+<img src="assets/blood.png">
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- FEATURES -->
+
+<section class="features">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Why Donate Blood?
+
+</h2>
+
+
+<div class="feature-grid">
+
+
+<div class="feature-card">
+
+<div class="icon">
+
+❤️
+
+</div>
+
+<h3>Save Lives</h3>
+
+<p>
+
+One blood donation can save up to three lives.
+
+</p>
+
+</div>
+
+
+
+<div class="feature-card">
+
+<div class="icon">
+
+🩺
+
+</div>
+
+<h3>Health Benefits</h3>
+
+<p>
+
+Regular donation improves heart health.
+
+</p>
+
+</div>
+
+
+
+<div class="feature-card">
+
+<div class="icon">
+
+🤝
+
+</div>
+
+<h3>Help Community</h3>
+
+<p>
+
+Support hospitals and patients in need.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- STATISTICS -->
+
+
+<section class="stats">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Our Impact
+
+</h2>
+
+
+<div class="stats-grid">
+
+
+<div class="stat-box">
+
+<h3>
+
+{{stats.totalDonors}}+
+
+</h3>
+
+<p>
+
+Donors
+
+</p>
+
+</div>
+
+
+
+<div class="stat-box">
+
+<h3>
+
+{{stats.totalHospitals}}+
+
+</h3>
+
+<p>
+
+Hospitals
+
+</p>
+
+</div>
+
+
+
+<div class="stat-box">
+
+<h3>
+
+{{stats.successfulDonations}}+
+
+</h3>
+
+<p>
+
+Donations
+
+</p>
+
+</div>
+
+
+
+<div class="stat-box">
+
+<h3>
+
+{{stats.livesImpacted}}+
+
+</h3>
+
+<p>
+
+Lives Saved
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- BLOOD GROUPS -->
+
+
+<section class="blood-section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Available Blood Groups
+
+</h2>
+
+
+<div class="blood-grid">
+
+<div class="blood">A+</div>
+
+<div class="blood">B+</div>
+
+<div class="blood">O+</div>
+
+<div class="blood">AB+</div>
+
+<div class="blood">A-</div>
+
+<div class="blood">B-</div>
+
+<div class="blood">O-</div>
+
+<div class="blood">AB-</div>
+
+</div>
+
+
+<p class="urgent">
+
+All blood groups are needed
+
+</p>
+
+
+</div>
+
+</section>
+
+
+
+
+<!-- EVENTS -->
+
+
+<section class="events" *ngIf="upcomingEvents.length > 0">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Upcoming Camps
+
+</h2>
+
+
+<div class="event-grid">
+
+<div
+class="event-card"
+*ngFor="let event of upcomingEvents">
+
+
+<h3>
+
+{{event.title}}
+
+</h3>
+
+
+<p>
+
+{{event.description}}
+
+</p>
+
+
+<div class="event-info">
+
+📍 {{event.location}}
+
+</div>
+
+
+<div class="event-info">
+
+📅 {{event.date | date:'mediumDate'}}
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<div class="center">
+
+<a routerLink="/events"
+class="secondary-btn">
+
+View All
+
+</a>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+
+<!-- CTA -->
+
+
+<section class="cta">
+
+<div class="container cta-box">
+
+<h2>
+
+Become a Blood Donor Today
+
+</h2>
+
+
+<p>
+
+Your donation can save lives.
+
+</p>
+
+
+<a routerLink="/register"
+class="primary-btn big">
+
+Register Now
+
+</a>
+
+
+</div>
+
+</section>
+
+
+
+</div>

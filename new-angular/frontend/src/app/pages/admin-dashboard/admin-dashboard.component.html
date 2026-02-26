@@ -1,0 +1,339 @@
+<div class="admin-dashboard">
+  <div class="container">
+    <section class="zone zone-identity card dashboard-header">
+      <div class="zone-head">
+        <p class="zone-kicker">Identity Zone</p>
+        <h1>Admin Command Center</h1>
+        <p>Govern donor, hospital, request, and event workflows with confidence.</p>
+      </div>
+
+      <div class="identity-grid">
+        <div class="identity-item">
+          <span class="identity-label">Operator</span>
+          <strong>{{ currentAdmin?.name || 'Administrator' }}</strong>
+        </div>
+        <div class="identity-item">
+          <span class="identity-label">Role</span>
+          <span class="badge badge-info">{{ currentAdmin?.role || 'admin' }}</span>
+        </div>
+        <div class="identity-item">
+          <span class="identity-label">System State</span>
+          <span class="badge" [ngClass]="systemState === 'High Alert' ? 'badge-danger' : systemState === 'Needs Attention' ? 'badge-warning' : 'badge-success'">
+            {{ systemState }}
+          </span>
+        </div>
+        <div class="identity-item">
+          <span class="identity-label">Governance</span>
+          <span class="badge badge-success">RBAC + Audit Ready</span>
+        </div>
+      </div>
+    </section>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <section class="zone">
+      <div class="zone-head compact">
+        <p class="zone-kicker">Impact Zone</p>
+        <h2>Platform Metrics</h2>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-number">{{ statistics.totalDonors }}</div>
+          <div class="stat-label">Total Donors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏥</div>
+          <div class="stat-number">{{ statistics.totalHospitals }}</div>
+          <div class="stat-label">Connected Hospitals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-number">{{ pendingRequestsCount }}</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card" [class.critical-card]="criticalRequestsCount > 0">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-number">{{ criticalRequestsCount }}</div>
+          <div class="stat-label">Critical Cases</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="zone">
+      <div class="zone-head compact">
+        <p class="zone-kicker">Action Zone</p>
+        <h2>Operational Decisions</h2>
+      </div>
+
+      <div class="tabs">
+      <button 
+        [class.active]="activeTab === 'overview'" 
+        (click)="setActiveTab('overview')"
+        class="tab-button"
+      >
+        Overview
+      </button>
+      <button 
+        [class.active]="activeTab === 'donors'" 
+        (click)="setActiveTab('donors')"
+        class="tab-button"
+      >
+        Donors ({{ donors.length }})
+      </button>
+      <button 
+        [class.active]="activeTab === 'hospitals'" 
+        (click)="setActiveTab('hospitals')"
+        class="tab-button"
+      >
+        Hospitals ({{ hospitals.length }})
+      </button>
+      <button 
+        [class.active]="activeTab === 'requests'" 
+        (click)="setActiveTab('requests')"
+        class="tab-button"
+      >
+        Requests ({{ requests.length }})
+      </button>
+      <button 
+        [class.active]="activeTab === 'events'" 
+        (click)="setActiveTab('events')"
+        class="tab-button"
+      >
+        Events ({{ events.length }})
+      </button>
+      </div>
+    </section>
+
+    <!-- Overview Tab -->
+    <div *ngIf="activeTab === 'overview'" class="tab-content">
+      <h2>System Overview</h2>
+      <div class="card trust-panel">
+        <div class="trust-cues">
+          <span class="badge badge-success">Authenticated Routes Active</span>
+          <span class="badge badge-info">Role-Based Controls Enabled</span>
+          <span class="badge badge-warning" *ngIf="pendingRequestsCount > 0">Pending Queue Requires Review</span>
+          <span class="badge badge-danger" *ngIf="criticalRequestsCount > 0">Critical Cases Escalated</span>
+        </div>
+        <p class="muted mt-2">
+          Keep the request pipeline reliable by prioritizing critical and pending cases.
+        </p>
+      </div>
+    </div>
+
+    <!-- Donors Tab -->
+    <div *ngIf="activeTab === 'donors'" class="tab-content">
+      <h2>All Donors</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Blood Group</th>
+              <th>Location</th>
+              <th>Available</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let donor of donors">
+              <td>{{ donor.name }}</td>
+              <td>{{ donor.email }}</td>
+              <td>{{ donor.phone }}</td>
+              <td><span class="blood-badge">{{ donor.bloodGroup }}</span></td>
+              <td>{{ donor.location }}</td>
+              <td>
+                <span [class]="donor.isAvailable ? 'badge badge-success' : 'badge badge-warning'">
+                  {{ donor.isAvailable ? 'Yes' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-delete" (click)="deleteUser(donor._id!)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Hospitals Tab -->
+    <div *ngIf="activeTab === 'hospitals'" class="tab-content">
+      <h2>All Hospitals</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Location</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hospital of hospitals">
+              <td>{{ hospital.name }}</td>
+              <td>{{ hospital.email }}</td>
+              <td>{{ hospital.phone }}</td>
+              <td>{{ hospital.location }}</td>
+              <td>
+                <button class="btn-delete" (click)="deleteUser(hospital._id!)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Requests Tab -->
+    <div *ngIf="activeTab === 'requests'" class="tab-content">
+      <h2>All Blood Requests</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Hospital</th>
+              <th>Blood Group</th>
+              <th>Urgency</th>
+              <th>Status</th>
+              <th>Donor</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of requests">
+              <td>{{ request.hospital?.name || 'N/A' }}</td>
+              <td><span class="blood-badge">{{ request.bloodGroup }}</span></td>
+              <td>
+                <span class="urgency-chip" [ngClass]="request.urgency?.toLowerCase()">
+                  {{ request.urgency || 'N/A' }}
+                </span>
+              </td>
+              <td>
+                <span [class]="'badge ' + getStatusBadgeClass(request.status)">
+                  {{ request.status }}
+                </span>
+              </td>
+              <td>{{ request.donor?.name || 'Not assigned' }}</td>
+              <td>{{ request.createdAt | date:'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Events Tab -->
+    <div *ngIf="activeTab === 'events'" class="tab-content">
+      <div class="events-header">
+        <h2>All Events</h2>
+        <button class="btn btn-primary" (click)="toggleEventForm()">
+          {{ showEventForm ? 'Cancel' : '+ New Event' }}
+        </button>
+      </div>
+
+      <div class="event-form card" *ngIf="showEventForm">
+        <h3>{{ editingEvent ? 'Edit Event' : 'Create New Event' }}</h3>
+        <form [formGroup]="eventForm" (ngSubmit)="saveEvent()" novalidate>
+          <div class="form-group">
+            <label for="title">Event Title *</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              formControlName="title"
+              [class.input-invalid]="ef.title.touched && ef.title.invalid"
+              placeholder="Event title"
+            />
+            <small class="field-error" *ngIf="ef.title.touched && ef.title.errors?.['required']">Title is required.</small>
+            <small class="field-error" *ngIf="ef.title.touched && ef.title.errors?.['minlength']">Title must be at least 3 characters.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              class="form-control"
+              formControlName="description"
+              [class.input-invalid]="ef.description.touched && ef.description.invalid"
+              rows="3"
+              placeholder="Event description"
+            ></textarea>
+            <small class="field-error" *ngIf="ef.description.touched && ef.description.errors?.['required']">Description is required.</small>
+            <small class="field-error" *ngIf="ef.description.touched && ef.description.errors?.['minlength']">Description must be at least 10 characters.</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input
+                type="text"
+                id="location"
+                class="form-control"
+                formControlName="location"
+                [class.input-invalid]="ef.location.touched && ef.location.invalid"
+                placeholder="Event location"
+              />
+              <small class="field-error" *ngIf="ef.location.touched && ef.location.errors?.['required']">Location is required.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="date">Date & Time *</label>
+              <input
+                type="datetime-local"
+                id="date"
+                class="form-control"
+                formControlName="date"
+                [class.input-invalid]="ef.date.touched && ef.date.invalid"
+              />
+              <small class="field-error" *ngIf="ef.date.touched && ef.date.errors?.['required']">Date & time is required.</small>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid || isSavingEvent">
+            {{ isSavingEvent ? 'Saving...' : (editingEvent ? 'Update Event' : 'Create Event') }}
+          </button>
+        </form>
+      </div>
+
+      <div class="grid grid-3 mt-3">
+        <div class="card event-card" *ngFor="let event of events">
+          <h3>{{ event.title }}</h3>
+          <p>{{ event.description }}</p>
+          <div class="event-details">
+            <p><strong>📍</strong> {{ event.location }}</p>
+            <p><strong>📅</strong> {{ event.date | date:'medium' }}</p>
+          </div>
+          <div class="event-actions">
+            <button class="btn btn-secondary" (click)="editEvent(event)">Edit</button>
+            <button class="btn-delete" (click)="deleteEvent(event._id!)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="zone">
+      <div class="zone-head compact">
+        <p class="zone-kicker">Trust Zone</p>
+        <h2>Operational Reliability</h2>
+      </div>
+
+      <div class="card trust-panel">
+        <div class="profile-grid">
+          <p><strong>Admin:</strong> {{ currentAdmin?.name || 'N/A' }}</p>
+          <p><strong>Email:</strong> {{ currentAdmin?.email || 'N/A' }}</p>
+          <p><strong>Role:</strong> {{ currentAdmin?.role || 'admin' }}</p>
+          <p><strong>Total Requests:</strong> {{ statistics.totalRequests }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

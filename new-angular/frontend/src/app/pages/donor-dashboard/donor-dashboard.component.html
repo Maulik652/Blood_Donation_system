@@ -1,0 +1,201 @@
+<div class="dashboard">
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  <section class="zone zone-identity card">
+    <div class="zone-head">
+      <p class="zone-kicker">Identity Zone</p>
+      <h2>Welcome back, {{ user?.name || 'Donor' }}</h2>
+      <p class="muted">Your readiness and profile are actively monitored for safe donations.</p>
+    </div>
+
+    <div class="identity-grid">
+      <div class="identity-item">
+        <span class="identity-label">Blood Group</span>
+        <span class="blood">{{ user?.bloodGroup || 'N/A' }}</span>
+      </div>
+      <div class="identity-item">
+        <span class="identity-label">Eligibility</span>
+        <span class="badge" [ngClass]="getEligibility() ? 'eligible' : 'not-eligible'">
+          {{ getEligibility() ? 'Eligible to Donate' : 'Cooling Period' }}
+        </span>
+      </div>
+      <div class="identity-item">
+        <span class="identity-label">Availability</span>
+        <span class="badge" [ngClass]="user?.isAvailable ? 'eligible' : 'not-eligible'">
+          {{ user?.isAvailable ? 'Available' : 'Unavailable' }}
+        </span>
+      </div>
+      <div class="identity-item" *ngIf="!getEligibility()">
+        <span class="identity-label">Next Eligible In</span>
+        <span class="countdown">{{ getRemainingDays() }} days</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Impact Zone</p>
+      <h3>Contribution & Motivation</h3>
+    </div>
+
+    <div class="grid stats-grid">
+    <div class="card stat">
+      <h3>{{ stats.totalDonations }}</h3>
+      <p>Total Donations</p>
+      <small class="muted">Your consistent action saves lives.</small>
+    </div>
+
+    <div class="card stat">
+      <h3>{{ stats.livesSaved }}</h3>
+      <p>Lives Saved</p>
+      <small class="muted">Estimated impact based on completed donations.</small>
+    </div>
+
+    <div class="card stat">
+      <h3>{{ stats.responseRate }}%</h3>
+      <p>Response Rate</p>
+      <small class="muted">A strong reliability indicator for hospitals.</small>
+    </div>
+
+    <div class="card stat motivational">
+      <h3>Mission Ready</h3>
+      <p>Every timely response builds trust in emergency care.</p>
+      <span class="badge badge-info">Community Impact Enabled</span>
+    </div>
+  </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Action Zone</p>
+      <h3>Critical Decisions</h3>
+    </div>
+
+    <div class="card availability">
+      <div>
+        <h3>Availability Control</h3>
+        <p class="muted">
+          You are currently
+          <strong>{{ user?.isAvailable ? 'Available' : 'Unavailable' }}</strong>
+        </p>
+      </div>
+
+      <button (click)="toggleAvailability()">
+        {{ user?.isAvailable ? 'Mark Unavailable' : 'Mark Available' }}
+      </button>
+    </div>
+
+    <div class="card">
+      <h3>High-Priority Blood Requests</h3>
+
+      <div *ngIf="isLoading" class="loading loading-skeleton" aria-live="polite">
+        <div class="skeleton-chip"></div>
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line w-50"></div>
+      </div>
+
+      <div
+        *ngFor="let request of availableRequests"
+        class="request"
+        [class.critical-focus]="request.urgency?.toLowerCase() === 'critical' || request.urgency?.toLowerCase() === 'high'">
+
+        <div class="request-info">
+          <strong>{{ request.hospital?.name }}</strong>
+
+          <p class="muted">
+            {{ request.bloodGroup }} • {{ request.hospital?.location }}
+          </p>
+
+          <span
+            class="urgency"
+            [ngClass]="request.urgency?.toLowerCase()">
+
+            {{ request.urgency || 'Normal' }}
+          </span>
+        </div>
+
+        <div class="actions">
+          <button class="accept" (click)="acceptRequest(request._id!)">
+            Accept
+          </button>
+
+          <button class="reject" (click)="rejectRequest(request._id!)">
+            Dismiss
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && availableRequests.length === 0" class="empty">
+        <span class="empty-icon">🩸</span>
+        <p>No matching requests available</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Trust Zone</p>
+      <h3>Reliability Snapshot</h3>
+    </div>
+
+    <div class="card profile">
+      <h3>Profile Snapshot</h3>
+
+      <div class="profile-grid">
+        <p><strong>Email:</strong> {{ user?.email }}</p>
+        <p><strong>Phone:</strong> {{ user?.phone }}</p>
+        <p><strong>Location:</strong> {{ user?.location }}</p>
+        <p><strong>Age:</strong> {{ user?.age }}</p>
+      </div>
+
+      <div class="trust-cues">
+        <span class="badge badge-success">Verified Identity</span>
+        <span class="badge badge-info">Secure Request Workflow</span>
+        <span class="badge badge-warning" *ngIf="!getEligibility()">Eligibility Cooling Window</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">History Zone</p>
+      <h3>Donation History</h3>
+    </div>
+
+    <div class="card">
+      <h3>Donation Timeline</h3>
+
+      <table *ngIf="donationHistory.length > 0">
+        <thead>
+          <tr>
+            <th>Hospital</th>
+            <th>Blood Group</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of donationHistory">
+            <td>{{ item.hospital?.name }}</td>
+            <td>{{ item.bloodGroup }}</td>
+            <td>
+              <span class="status" [ngClass]="item.status">
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="!isLoading && donationHistory.length === 0" class="empty">
+        <span class="empty-icon">📋</span>
+        <p>No donation history yet</p>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,102 @@
+.contact-page {
+  min-height: calc(100vh - 170px);
+}
+
+.contact-hero {
+  text-align: center;
+  padding: 70px 20px 42px;
+}
+
+.contact-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--text-primary);
+}
+
+.hero-subtitle {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.contact-content {
+  padding: 18px 0 46px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.contact-info h2,
+.card h2 {
+  color: var(--text-primary);
+  font-size: 1.35rem;
+}
+
+.info-text {
+  margin: 10px 0 16px;
+  color: var(--text-secondary);
+}
+
+.info-item,
+.emergency-box,
+.card {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.info-item h4 {
+  color: var(--text-primary);
+}
+
+.info-item p,
+.info-item a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.info-icon {
+  font-size: 1.3rem;
+}
+
+.emergency-box {
+  margin-top: 12px;
+  padding: 18px;
+  text-align: center;
+  background: var(--primary-50);
+  border-color: #fecaca;
+}
+
+.emergency-box h3 {
+  color: var(--primary-600);
+  font-size: 1.06rem;
+}
+
+.emergency-number {
+  margin: 8px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-600);
+}
+
+.card {
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}

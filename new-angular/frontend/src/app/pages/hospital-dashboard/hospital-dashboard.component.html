@@ -1,0 +1,211 @@
+<div class="hospital-dashboard">
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  <section class="zone zone-identity card">
+    <div class="zone-head">
+      <p class="zone-kicker">Identity Zone</p>
+      <h2>Hospital Control Panel</h2>
+      <p class="muted">Coordinate urgency with clarity and confidence.</p>
+    </div>
+
+    <div class="identity-grid">
+      <div class="identity-item">
+        <span class="identity-label">Organization</span>
+        <strong>{{ profile?.name || 'Hospital Unit' }}</strong>
+      </div>
+      <div class="identity-item">
+        <span class="identity-label">System State</span>
+        <span class="badge" [ngClass]="stats.critical > 0 ? 'badge-danger' : 'badge-success'">
+          {{ stats.critical > 0 ? 'Critical Requests Present' : 'Stable Queue' }}
+        </span>
+      </div>
+      <div class="identity-item">
+        <span class="identity-label">Availability Stream</span>
+        <span class="badge badge-info">Live Donor Matching</span>
+      </div>
+      <div class="identity-item">
+        <span class="identity-label">Reliability Mode</span>
+        <span class="badge badge-success">Protected Workflow</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Impact Zone</p>
+      <h3>Operational Snapshot</h3>
+    </div>
+
+    <div class="quick-stats">
+      <div class="stat-box">
+        <strong>{{ stats.active }}</strong>
+        <span>Active Requests</span>
+      </div>
+      <div class="stat-box critical">
+        <strong>{{ stats.critical }}</strong>
+        <span>Critical</span>
+      </div>
+      <div class="stat-box">
+        <strong>{{ completedRequests.length }}</strong>
+        <span>Completed</span>
+      </div>
+      <div class="stat-box">
+        <strong>{{ requests.length }}</strong>
+        <span>Total Cases</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Action Zone</p>
+      <h3>Critical Actions</h3>
+    </div>
+
+    <div class="card create">
+      <h3>Create Blood Request</h3>
+
+      <form [formGroup]="requestForm" (ngSubmit)="createRequest()" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <select formControlName="bloodGroup" [class.input-invalid]="rf.bloodGroup.touched && rf.bloodGroup.invalid">
+              <option value="">Blood Group</option>
+              <option *ngFor="let bg of bloodGroups">{{ bg }}</option>
+            </select>
+            <small class="field-error" *ngIf="rf.bloodGroup.touched && rf.bloodGroup.errors?.['required']">Blood group is required.</small>
+          </div>
+
+          <div class="form-group">
+            <select formControlName="urgency" [class.input-invalid]="rf.urgency.touched && rf.urgency.invalid">
+              <option value="">Urgency</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+            <small class="field-error" *ngIf="rf.urgency.touched && rf.urgency.errors?.['required']">Urgency is required.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <textarea 
+            placeholder="Enter medical notes / message"
+            formControlName="message"
+            [class.input-invalid]="rf.message.touched && rf.message.invalid">
+          </textarea>
+          <small class="field-error" *ngIf="rf.message.touched && rf.message.errors?.['required']">Message is required.</small>
+          <small class="field-error" *ngIf="rf.message.touched && rf.message.errors?.['minlength']">Message must be at least 10 characters.</small>
+          <small class="field-error" *ngIf="rf.message.touched && rf.message.errors?.['maxlength']">Message cannot exceed 500 characters.</small>
+        </div>
+
+        <button class="btn btn-primary" type="submit" [disabled]="requestForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Creating...' : 'Create Request' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>High-Urgency Queue</h3>
+
+      <div *ngIf="isLoading" class="loading loading-skeleton" aria-live="polite">
+        <div class="skeleton-chip"></div>
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line w-35"></div>
+      </div>
+
+      <div *ngIf="!isLoading && activeRequests.length === 0" class="empty">
+        <span class="empty-icon">🚑</span>
+        <p>No active requests found.</p>
+      </div>
+
+      <div *ngFor="let request of activeRequests" class="request-card" [class.critical-focus]="request.urgency === 'Critical' || request.urgency === 'High'">
+        <div>
+          <span class="badge blood-badge">{{ request.bloodGroup }}</span>
+          <span class="urgency" [class]="request.urgency?.toLowerCase()">
+            {{ request.urgency }}
+          </span>
+
+          <p>{{ request.message }}</p>
+          <small>
+            Status:
+            <span class="status-chip" [ngClass]="getStatusClass(request.status)">
+              {{ request.status }}
+            </span>
+          </small>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" (click)="completeRequest(request._id!)" [disabled]="request.status !== 'accepted'">
+            Complete
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">Trust Zone</p>
+      <h3>Reliability Snapshot</h3>
+    </div>
+
+    <div class="card trust-card">
+      <div class="profile-grid">
+        <p><strong>Hospital:</strong> {{ profile?.name || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ profile?.email || 'N/A' }}</p>
+        <p><strong>Location:</strong> {{ profile?.location || 'N/A' }}</p>
+        <p><strong>Emergency Control:</strong> Active</p>
+      </div>
+
+      <div class="trust-cues">
+        <span class="badge badge-success">Protected API Access</span>
+        <span class="badge badge-info">Role-Based Authorization</span>
+        <span class="badge badge-warning" *ngIf="stats.critical > 0">Critical Alerts Active</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="zone-head compact">
+      <p class="zone-kicker">History Zone</p>
+      <h3>Completed Request History</h3>
+    </div>
+
+    <div class="card">
+      <div class="table-responsive" *ngIf="completedRequests.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Blood Group</th>
+              <th>Urgency</th>
+              <th>Status</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of completedRequests">
+              <td><span class="blood-badge">{{ request.bloodGroup }}</span></td>
+              <td><span class="urgency" [class]="request.urgency?.toLowerCase()">{{ request.urgency || 'Medium' }}</span></td>
+              <td><span class="status-chip status-info">Completed</span></td>
+              <td>{{ request.message }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!isLoading && completedRequests.length === 0" class="empty">
+        <span class="empty-icon">✅</span>
+        <p>No completed requests yet.</p>
+      </div>
+    </div>
+  </section>
+
+</div>

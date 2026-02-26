@@ -1,0 +1,74 @@
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
+const connectDB = require('./config/db');
+const { errorHandler } = require('./middleware/errorMiddleware');
+
+// Load env vars
+dotenv.config();
+
+// Connect to database
+connectDB();
+
+const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+
+// Middleware
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:4200')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  })
+);
+app.use(helmet());
+app.use(cookieParser());
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests from this client. Please try again later.',
+  },
+});
+
+app.use('/api', globalLimiter);
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: false, limit: '100kb' }));
+
+// Routes
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/requests', require('./routes/requestRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/events', require('./routes/eventRoutes'));
+
+// Error handler
+app.use(errorHandler);
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'Blood Donation Management System API' });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -1,0 +1,302 @@
+<div class="contact-page">
+
+  <!-- HERO SECTION -->
+  <section class="contact-hero">
+    <div class="container">
+      <h1>Contact BloodConnect</h1>
+      <p class="hero-subtitle">
+        We are here to help you with blood donation support
+      </p>
+    </div>
+  </section>
+
+
+  <!-- MAIN CONTACT SECTION -->
+  <section class="contact-content">
+    <div class="container">
+
+      <div class="contact-grid">
+
+
+        <!-- LEFT SIDE INFO -->
+        <div class="contact-info">
+
+          <h2>Get In Touch</h2>
+
+          <p class="info-text">
+            Have questions about blood donation or need urgent help?
+            Our team is ready to assist you anytime.
+          </p>
+
+
+          <!-- EMAIL -->
+          <div class="info-item">
+
+            <div class="info-icon">
+              📧
+            </div>
+
+            <div>
+
+              <h4>Email</h4>
+
+              <p>
+                <a href="mailto:info@bloodconnect.com">
+                  info&#64;bloodconnect.com
+                </a>
+              </p>
+
+              <p>
+                <a href="mailto:support@bloodconnect.com">
+                  support&#64;bloodconnect.com
+                </a>
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- PHONE -->
+          <div class="info-item">
+
+            <div class="info-icon">
+              📱
+            </div>
+
+            <div>
+
+              <h4>Phone</h4>
+
+              <p>+91 98765 43210</p>
+
+              <p>+91 98765 43211</p>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ADDRESS -->
+          <div class="info-item">
+
+            <div class="info-icon">
+              📍
+            </div>
+
+            <div>
+
+              <h4>Address</h4>
+
+              <p>BloodConnect Center</p>
+
+              <p>Healthcare Road</p>
+
+              <p>Surat, Gujarat</p>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- WORKING HOURS -->
+          <div class="info-item">
+
+            <div class="info-icon">
+              🕒
+            </div>
+
+            <div>
+
+              <h4>Working Hours</h4>
+
+              <p>Monday – Friday : 9 AM - 6 PM</p>
+
+              <p>Saturday : 9 AM - 2 PM</p>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- EMERGENCY BOX -->
+
+          <div class="emergency-box">
+
+            <h3>
+              Emergency Blood Required?
+            </h3>
+
+            <div class="emergency-number">
+              📞 108
+            </div>
+
+            <p>
+              Emergency support available 24 Hours
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- RIGHT SIDE FORM -->
+
+
+        <div class="contact-form-container">
+
+          <div class="card">
+
+
+            <h2>
+              Send Message
+            </h2>
+
+
+
+            <!-- SUCCESS -->
+
+            <div
+            *ngIf="successMessage"
+            class="alert alert-success">
+
+            {{successMessage}}
+
+            </div>
+
+
+
+            <!-- ERROR -->
+
+            <div
+            *ngIf="errorMessage"
+            class="alert alert-error">
+
+            {{errorMessage}}
+
+            </div>
+
+
+
+            <form
+            [formGroup]="contactForm"
+            (ngSubmit)="onSubmit()"
+            novalidate>
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+            <label>Name</label>
+
+            <input
+            type="text"
+            formControlName="name"
+            [class.input-invalid]="f.name.touched && f.name.invalid"
+            class="form-control"
+            placeholder="Enter your name">
+
+            <small class="field-error" *ngIf="f.name.touched && f.name.errors?.['required']">Name is required.</small>
+            <small class="field-error" *ngIf="f.name.touched && f.name.errors?.['minlength']">Name must be at least 2 characters.</small>
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+            <label>Email</label>
+
+            <input
+            type="email"
+            formControlName="email"
+            [class.input-invalid]="f.email.touched && f.email.invalid"
+            class="form-control"
+            placeholder="Enter your email">
+
+            <small class="field-error" *ngIf="f.email.touched && f.email.errors?.['required']">Email is required.</small>
+            <small class="field-error" *ngIf="f.email.touched && f.email.errors?.['email']">Enter a valid email address.</small>
+
+            </div>
+
+
+
+            <!-- SUBJECT -->
+
+            <div class="form-group">
+
+            <label>Subject</label>
+
+            <input
+            type="text"
+            formControlName="subject"
+            [class.input-invalid]="f.subject.touched && f.subject.invalid"
+            class="form-control"
+            placeholder="Subject">
+
+            <small class="field-error" *ngIf="f.subject.touched && f.subject.errors?.['required']">Subject is required.</small>
+            <small class="field-error" *ngIf="f.subject.touched && f.subject.errors?.['minlength']">Subject must be at least 3 characters.</small>
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+
+            <div class="form-group">
+
+            <label>Message</label>
+
+            <textarea
+            formControlName="message"
+            [class.input-invalid]="f.message.touched && f.message.invalid"
+            rows="5"
+            class="form-control"
+            placeholder="Write your message">
+
+            </textarea>
+
+            <small class="field-error" *ngIf="f.message.touched && f.message.errors?.['required']">Message is required.</small>
+            <small class="field-error" *ngIf="f.message.touched && f.message.errors?.['minlength']">Message must be at least 10 characters.</small>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            [disabled]="contactForm.invalid">
+
+            Send Message
+
+            </button>
+
+
+
+            </form>
+
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
