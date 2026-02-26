@@ -30,7 +30,7 @@
 
       <div *ngIf="events.length > 0" class="grid grid-3">
         <div class="event-card" *ngFor="let event of events">
-          <img [src]="event.imageUrl" class="event-image" alt="Blood donation event" />
+          <img [src]="event.imageUrl || fallbackImageUrl" class="event-image" alt="Blood donation event" />
 
           <div class="event-body">
             <h3>{{ event.title }}</h3>

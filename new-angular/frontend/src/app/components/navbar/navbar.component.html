@@ -58,11 +58,7 @@
         <ng-container *ngIf="isLoggedIn">
 
           <li>
-            <a [routerLink]="
-                userRole === 'user' ? '/donor-dashboard' :
-                userRole === 'hospital' ? '/hospital-dashboard' :
-                '/admin-dashboard'
-              "
+            <a [routerLink]="dashboardRoute"
               class="dashboard"
               (click)="closeMenu()">
               Dashboard
@@ -71,7 +67,7 @@
 
           <li class="user-area">
             <div class="avatar">
-              {{ userName.charAt(0) }}
+              {{ userName ? userName.charAt(0) : '?' }}
             </div>
             <span>{{ userName }}</span>
           </li>

@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./events.component.css']
 })
 export class EventsComponent implements OnInit, OnDestroy {
+  readonly fallbackImageUrl = 'https://images.unsplash.com/photo-1615461066841-6116e61058f4';
   events: Event[] = [];
   isLoading = true;
   errorMessage = '';

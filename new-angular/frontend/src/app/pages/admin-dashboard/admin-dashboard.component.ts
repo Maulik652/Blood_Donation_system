@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { Request } from '../../models/request.model';
 import { Event, CreateEventData } from '../../models/event.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -75,10 +76,26 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadAllData(): void {
-    this.loadDonors();
-    this.loadHospitals();
-    this.loadRequests();
-    this.loadEvents();
+    this.isLoading = true;
+
+    forkJoin({
+      donors: this.adminService.getAllUsers(),
+      hospitals: this.adminService.getAllHospitals(),
+      requests: this.adminService.getAllRequests(),
+      events: this.eventService.getAllEvents(),
+    }).subscribe({
+      next: ({ donors, hospitals, requests, events }) => {
+        this.donors = donors.users || [];
+        this.hospitals = hospitals.hospitals || [];
+        this.requests = requests.requests || [];
+        this.events = events.events || [];
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'Failed to load admin dashboard data.';
+        this.isLoading = false;
+      }
+    });
   }
 
   loadDonors(): void {

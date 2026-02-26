@@ -279,6 +279,15 @@
   gap: 8px 16px;
 }
 
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 24px 16px;
+}
+
 @media (max-width: 968px) {
   .dashboard-header {
     grid-template-columns: 1fr;

@@ -4,17 +4,23 @@ const eventSchema = new mongoose.Schema(
 {
 title:{
 type:String,
-required:true
+required:true,
+trim:true,
+maxlength:120
 },
 
 description:{
 type:String,
-required:true
+required:true,
+trim:true,
+maxlength:1000
 },
 
 location:{
 type:String,
-required:true
+required:true,
+trim:true,
+maxlength:120
 },
 
 date:{
@@ -49,7 +55,9 @@ ref: 'User'
 
 imageUrl:{
 type:String,
-default:"https://images.unsplash.com/photo-1615461066841-6116e61058f4"
+default:"https://images.unsplash.com/photo-1615461066841-6116e61058f4",
+trim:true,
+maxlength:500
 }
 
 },
@@ -57,5 +65,7 @@ default:"https://images.unsplash.com/photo-1615461066841-6116e61058f4"
 timestamps:true
 }
 );
+
+eventSchema.index({ date: 1 });
 
 module.exports = mongoose.model('Event',eventSchema);

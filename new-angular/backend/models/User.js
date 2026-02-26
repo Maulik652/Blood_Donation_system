@@ -80,6 +80,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.index({ role: 1, createdAt: -1 });
+userSchema.index({ bloodGroup: 1, isAvailable: 1, role: 1 });
+
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();

@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
 const Request = require('../models/Request');
-const User = require('../models/User').default;
+const User = require('../models/User');
 const { sanitizeText, isInEnum } = require('../utils/validation');
 
 const VALID_STATUSES = ['pending', 'accepted', 'rejected', 'completed'];

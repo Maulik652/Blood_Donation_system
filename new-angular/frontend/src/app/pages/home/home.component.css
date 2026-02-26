@@ -184,6 +184,11 @@ section {
   text-align: center;
 }
 
+.home-events-alert {
+  max-width: 680px;
+  margin: 0 auto 18px;
+}
+
 .urgent {
   color: var(--text-secondary);
 }

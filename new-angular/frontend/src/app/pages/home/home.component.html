@@ -288,7 +288,7 @@ All blood groups are needed
 <!-- EVENTS -->
 
 
-<section class="events" *ngIf="upcomingEvents.length > 0">
+<section class="events">
 
 <div class="container">
 
@@ -298,7 +298,19 @@ Upcoming Camps
 
 </h2>
 
+<div *ngIf="eventsErrorMessage" class="alert alert-error home-events-alert">
+{{ eventsErrorMessage }}
+</div>
 
+<div *ngIf="isLoadingEvents" class="loading loading-skeleton" aria-live="polite">
+<div class="skeleton-chip"></div>
+<div class="skeleton-line w-70"></div>
+<div class="skeleton-line"></div>
+<div class="skeleton-line w-50"></div>
+</div>
+
+
+<ng-container *ngIf="!isLoadingEvents && upcomingEvents.length > 0">
 <div class="event-grid">
 
 <div
@@ -348,6 +360,12 @@ View All
 
 </a>
 
+</div>
+
+</ng-container>
+
+<div *ngIf="!isLoadingEvents && !eventsErrorMessage && upcomingEvents.length === 0" class="center urgent">
+No upcoming camps published yet.
 </div>
 
 

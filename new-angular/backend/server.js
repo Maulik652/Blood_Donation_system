@@ -10,6 +10,14 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 // Load env vars
 dotenv.config();
 
+const requiredEnv = ['MONGO_URI', 'JWT_SECRET'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+
+if (missingEnv.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnv.join(', ')}`);
+  process.exit(1);
+}
+
 // Connect to database
 connectDB();
 

@@ -34,7 +34,9 @@ const requestSchema = new mongoose.Schema(
 
     message: {
       type: String,
-      required: [true, 'Please add a message']
+      required: [true, 'Please add a message'],
+      trim: true,
+      maxlength: 500
     },
 
     /* ✅ ENTERPRISE TRACKING */
@@ -52,5 +54,9 @@ const requestSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+requestSchema.index({ hospital: 1, createdAt: -1 });
+requestSchema.index({ status: 1, donor: 1, bloodGroup: 1, createdAt: -1 });
+requestSchema.index({ donor: 1, updatedAt: -1 });
 
 module.exports = mongoose.model('Request', requestSchema);

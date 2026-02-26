@@ -37,6 +37,13 @@
       {{ errorMessage }}
     </div>
 
+    <div *ngIf="isLoading" class="loading loading-skeleton" aria-live="polite">
+      <div class="skeleton-chip"></div>
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line w-50"></div>
+    </div>
+
     <section class="zone">
       <div class="zone-head compact">
         <p class="zone-kicker">Impact Zone</p>
@@ -131,7 +138,7 @@
     <!-- Donors Tab -->
     <div *ngIf="activeTab === 'donors'" class="tab-content">
       <h2>All Donors</h2>
-      <div class="table-responsive">
+      <div class="table-responsive" *ngIf="donors.length > 0">
         <table class="data-table">
           <thead>
             <tr>
@@ -163,12 +170,13 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="!isLoading && donors.length === 0" class="empty-state">No donors found.</div>
     </div>
 
     <!-- Hospitals Tab -->
     <div *ngIf="activeTab === 'hospitals'" class="tab-content">
       <h2>All Hospitals</h2>
-      <div class="table-responsive">
+      <div class="table-responsive" *ngIf="hospitals.length > 0">
         <table class="data-table">
           <thead>
             <tr>
@@ -192,12 +200,13 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="!isLoading && hospitals.length === 0" class="empty-state">No hospitals found.</div>
     </div>
 
     <!-- Requests Tab -->
     <div *ngIf="activeTab === 'requests'" class="tab-content">
       <h2>All Blood Requests</h2>
-      <div class="table-responsive">
+      <div class="table-responsive" *ngIf="requests.length > 0">
         <table class="data-table">
           <thead>
             <tr>
@@ -229,6 +238,7 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="!isLoading && requests.length === 0" class="empty-state">No requests found.</div>
     </div>
 
     <!-- Events Tab -->
@@ -304,7 +314,7 @@
         </form>
       </div>
 
-      <div class="grid grid-3 mt-3">
+      <div class="grid grid-3 mt-3" *ngIf="events.length > 0">
         <div class="card event-card" *ngFor="let event of events">
           <h3>{{ event.title }}</h3>
           <p>{{ event.description }}</p>
@@ -318,6 +328,7 @@
           </div>
         </div>
       </div>
+      <div *ngIf="!isLoading && events.length === 0" class="empty-state">No events found.</div>
     </div>
 
     <section class="zone">

@@ -31,6 +31,10 @@ export class LoginComponent {
     return this.loginForm.controls;
   }
 
+  private isSafeReturnUrl(returnUrl: string): boolean {
+    return returnUrl.startsWith('/') && !returnUrl.startsWith('//');
+  }
+
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -50,7 +54,7 @@ export class LoginComponent {
       next: () => {
         this.isLoading = false;
         const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        if (returnUrl) {
+        if (returnUrl && this.isSafeReturnUrl(returnUrl)) {
           this.router.navigateByUrl(returnUrl);
           return;
         }

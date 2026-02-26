@@ -13,6 +13,8 @@ import { Event } from '../../models/event.model';
 })
 export class HomeComponent implements OnInit {
   upcomingEvents: Event[] = [];
+  isLoadingEvents = true;
+  eventsErrorMessage = '';
   stats = {
     totalDonors: 1250,
     totalHospitals: 45,
@@ -27,12 +29,18 @@ export class HomeComponent implements OnInit {
   }
 
   loadUpcomingEvents(): void {
+    this.isLoadingEvents = true;
+    this.eventsErrorMessage = '';
+
     this.eventService.getAllEvents().subscribe({
       next: (response) => {
         this.upcomingEvents = response.events?.slice(0, 3) || [];
+        this.isLoadingEvents = false;
       },
-      error: (error) => {
-        console.error('Error loading events:', error);
+      error: () => {
+        this.eventsErrorMessage = 'Unable to load upcoming camps right now.';
+        this.upcomingEvents = [];
+        this.isLoadingEvents = false;
       }
     });
   }
