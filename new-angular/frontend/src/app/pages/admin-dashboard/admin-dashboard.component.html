@@ -170,6 +170,11 @@
           </tbody>
         </table>
       </div>
+      <div class="pagination" *ngIf="!isLoading && donorsPagination.totalPages > 1">
+        <button class="btn btn-secondary" (click)="changeDonorPage(donorsPagination.page - 1)" [disabled]="donorsPagination.page <= 1">Previous</button>
+        <span>Page {{ donorsPagination.page }} of {{ donorsPagination.totalPages }}</span>
+        <button class="btn btn-secondary" (click)="changeDonorPage(donorsPagination.page + 1)" [disabled]="donorsPagination.page >= donorsPagination.totalPages">Next</button>
+      </div>
       <div *ngIf="!isLoading && donors.length === 0" class="empty-state">No donors found.</div>
     </div>
 
@@ -199,6 +204,11 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="pagination" *ngIf="!isLoading && hospitalsPagination.totalPages > 1">
+        <button class="btn btn-secondary" (click)="changeHospitalPage(hospitalsPagination.page - 1)" [disabled]="hospitalsPagination.page <= 1">Previous</button>
+        <span>Page {{ hospitalsPagination.page }} of {{ hospitalsPagination.totalPages }}</span>
+        <button class="btn btn-secondary" (click)="changeHospitalPage(hospitalsPagination.page + 1)" [disabled]="hospitalsPagination.page >= hospitalsPagination.totalPages">Next</button>
       </div>
       <div *ngIf="!isLoading && hospitals.length === 0" class="empty-state">No hospitals found.</div>
     </div>
@@ -237,6 +247,11 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="pagination" *ngIf="!isLoading && requestsPagination.totalPages > 1">
+        <button class="btn btn-secondary" (click)="changeRequestPage(requestsPagination.page - 1)" [disabled]="requestsPagination.page <= 1">Previous</button>
+        <span>Page {{ requestsPagination.page }} of {{ requestsPagination.totalPages }}</span>
+        <button class="btn btn-secondary" (click)="changeRequestPage(requestsPagination.page + 1)" [disabled]="requestsPagination.page >= requestsPagination.totalPages">Next</button>
       </div>
       <div *ngIf="!isLoading && requests.length === 0" class="empty-state">No requests found.</div>
     </div>
@@ -306,6 +321,35 @@
               />
               <small class="field-error" *ngIf="ef.date.touched && ef.date.errors?.['required']">Date & time is required.</small>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label>Required Blood Groups *</label>
+            <div class="blood-group-grid">
+              <button
+                type="button"
+                class="blood-chip"
+                *ngFor="let group of bloodGroupOptions"
+                [class.selected]="isBloodGroupSelected(group)"
+                (click)="toggleBloodGroup(group)">
+                {{ group }}
+              </button>
+            </div>
+            <small class="field-error" *ngIf="ef.bloodGroups.touched && (ef.bloodGroups.value || []).length === 0">Select at least one blood group.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="capacity">Capacity *</label>
+            <input
+              type="number"
+              id="capacity"
+              class="form-control"
+              formControlName="capacity"
+              min="1"
+              [class.input-invalid]="ef.capacity.touched && ef.capacity.invalid"
+            />
+            <small class="field-error" *ngIf="ef.capacity.touched && ef.capacity.errors?.['required']">Capacity is required.</small>
+            <small class="field-error" *ngIf="ef.capacity.touched && ef.capacity.errors?.['min']">Capacity must be at least 1.</small>
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid || isSavingEvent">

@@ -8,6 +8,7 @@ const VALID_BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const normalizeEventPayload = (payload) => {
     const date = payload.date ? new Date(payload.date) : null;
     const normalizedCapacity = payload.capacity !== undefined ? Number(payload.capacity) : undefined;
+    const normalizedImageUrl = sanitizeText(payload.imageUrl, { maxLength: 500 });
     return {
         title: sanitizeText(payload.title, { maxLength: 120 }),
         description: sanitizeText(payload.description, { maxLength: 1000 }),
@@ -17,7 +18,7 @@ const normalizeEventPayload = (payload) => {
             ? payload.bloodGroups.filter((group) => VALID_BLOOD_GROUPS.includes(group))
             : undefined,
         capacity: normalizedCapacity,
-        imageUrl: sanitizeText(payload.imageUrl, { maxLength: 500 }),
+        imageUrl: normalizedImageUrl || undefined,
     };
 };
 
@@ -186,7 +187,7 @@ throw new Error('Capacity cannot be less than registered users');
 }
 event.capacity = normalized.capacity;
 }
-if (normalized.imageUrl !== undefined) event.imageUrl = normalized.imageUrl;
+if (req.body.imageUrl !== undefined && normalized.imageUrl) event.imageUrl = normalized.imageUrl;
 
 await event.save();
 

@@ -8,16 +8,34 @@ import { Request } from '../models/request.model';
 interface AdminListUsersResponse {
   success: boolean;
   users: User[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 interface AdminListHospitalsResponse {
   success: boolean;
   hospitals: User[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 interface AdminListRequestsResponse {
   success: boolean;
   requests: Request[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 interface AdminStatsResponse {
@@ -38,16 +56,16 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  getAllUsers(): Observable<AdminListUsersResponse> {
-    return this.http.get<AdminListUsersResponse>(`${this.apiUrl}/admin/users`);
+  getAllUsers(page = 1, limit = 20): Observable<AdminListUsersResponse> {
+    return this.http.get<AdminListUsersResponse>(`${this.apiUrl}/admin/users?page=${page}&limit=${limit}`);
   }
 
-  getAllHospitals(): Observable<AdminListHospitalsResponse> {
-    return this.http.get<AdminListHospitalsResponse>(`${this.apiUrl}/admin/hospitals`);
+  getAllHospitals(page = 1, limit = 20): Observable<AdminListHospitalsResponse> {
+    return this.http.get<AdminListHospitalsResponse>(`${this.apiUrl}/admin/hospitals?page=${page}&limit=${limit}`);
   }
 
-  getAllRequests(): Observable<AdminListRequestsResponse> {
-    return this.http.get<AdminListRequestsResponse>(`${this.apiUrl}/admin/requests`);
+  getAllRequests(page = 1, limit = 20): Observable<AdminListRequestsResponse> {
+    return this.http.get<AdminListRequestsResponse>(`${this.apiUrl}/admin/requests?page=${page}&limit=${limit}`);
   }
 
   deleteUser(userId: string): Observable<{ success: boolean; message: string }> {

@@ -159,34 +159,54 @@ const updateRequestStatus = asyncHandler(async (req, res) => {
       throw new Error('Hospitals can only mark requests as completed');
     }
 
-    const completeWithoutTransaction = async () => {
-      const request = await Request.findById(requestId);
+    const ensureCompletableRequest = async (session = null) => {
+      const options = session ? { session } : undefined;
+      const existing = await Request.findById(requestId, null, options);
 
-      if (!request) {
+      if (!existing) {
         res.status(404);
         throw new Error('Request not found');
       }
 
-      if (request.hospital.toString() !== req.user._id.toString()) {
+      if (existing.hospital.toString() !== req.user._id.toString()) {
         res.status(403);
         throw new Error('You can only update your own requests');
       }
 
-      if (request.status !== 'accepted' || !request.donor) {
+      if (existing.status !== 'accepted' || !existing.donor) {
         res.status(409);
         throw new Error('Only accepted requests can be completed');
       }
 
-      const previousStatus = request.status;
-      const previousCompletedAt = request.completedAt;
+      return existing;
+    };
 
-      request.status = 'completed';
-      request.completedAt = new Date();
-      await request.save();
+    const completeWithoutTransaction = async () => {
+      const completedRequest = await Request.findOneAndUpdate(
+        {
+          _id: requestId,
+          hospital: req.user._id,
+          status: 'accepted',
+          donor: { $ne: null },
+        },
+        {
+          $set: {
+            status: 'completed',
+            completedAt: new Date(),
+          },
+        },
+        { new: true }
+      );
+
+      if (!completedRequest) {
+        await ensureCompletableRequest();
+        res.status(409);
+        throw new Error('Request completion conflict. Please retry');
+      }
 
       try {
         const donorUpdate = await User.findByIdAndUpdate(
-          request.donor,
+          completedRequest.donor,
           {
             $inc: { totalDonations: 1 },
             $set: { lastDonationDate: new Date() },
@@ -198,9 +218,9 @@ const updateRequestStatus = asyncHandler(async (req, res) => {
           throw new Error('Assigned donor not found');
         }
       } catch (error) {
-        request.status = previousStatus;
-        request.completedAt = previousCompletedAt;
-        await request.save();
+        await Request.findByIdAndUpdate(completedRequest._id, {
+          $set: { status: 'accepted', completedAt: null },
+        });
         throw error;
       }
     };
@@ -212,26 +232,27 @@ const updateRequestStatus = asyncHandler(async (req, res) => {
 
       try {
         await session.withTransaction(async () => {
-          const request = await Request.findById(requestId).session(session);
+          const request = await Request.findOneAndUpdate(
+            {
+              _id: requestId,
+              hospital: req.user._id,
+              status: 'accepted',
+              donor: { $ne: null },
+            },
+            {
+              $set: {
+                status: 'completed',
+                completedAt: new Date(),
+              },
+            },
+            { new: true, session }
+          );
 
           if (!request) {
-            res.status(404);
-            throw new Error('Request not found');
-          }
-
-          if (request.hospital.toString() !== req.user._id.toString()) {
-            res.status(403);
-            throw new Error('You can only update your own requests');
-          }
-
-          if (request.status !== 'accepted' || !request.donor) {
+            await ensureCompletableRequest(session);
             res.status(409);
-            throw new Error('Only accepted requests can be completed');
+            throw new Error('Request completion conflict. Please retry');
           }
-
-          request.status = 'completed';
-          request.completedAt = new Date();
-          await request.save({ session });
 
           const donorUpdate = await User.findByIdAndUpdate(
             request.donor,

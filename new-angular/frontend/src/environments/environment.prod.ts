@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:5000/api'
+  apiUrl: (window as { __env?: { apiUrl?: string } }).__env?.apiUrl || '/api'
 };

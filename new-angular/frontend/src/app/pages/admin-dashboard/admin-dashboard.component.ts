@@ -9,6 +9,13 @@ import { Request } from '../../models/request.model';
 import { Event, CreateEventData } from '../../models/event.model';
 import { forkJoin } from 'rxjs';
 
+interface PaginationState {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -34,12 +41,19 @@ export class AdminDashboardComponent implements OnInit {
 
   showEventForm = false;
   editingEvent: Event | null = null;
+  readonly bloodGroupOptions = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+  donorsPagination: PaginationState = { page: 1, limit: 20, total: 0, totalPages: 1 };
+  hospitalsPagination: PaginationState = { page: 1, limit: 20, total: 0, totalPages: 1 };
+  requestsPagination: PaginationState = { page: 1, limit: 20, total: 0, totalPages: 1 };
   
   eventForm = this.formBuilder.group({
     title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
     description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
     location: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
     date: ['', [Validators.required]],
+    bloodGroups: [<string[]>[], [Validators.required]],
+    capacity: [50, [Validators.required, Validators.min(1)]],
   });
 
   errorMessage = '';
@@ -79,9 +93,9 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
 
     forkJoin({
-      donors: this.adminService.getAllUsers(),
-      hospitals: this.adminService.getAllHospitals(),
-      requests: this.adminService.getAllRequests(),
+      donors: this.adminService.getAllUsers(this.donorsPagination.page, this.donorsPagination.limit),
+      hospitals: this.adminService.getAllHospitals(this.hospitalsPagination.page, this.hospitalsPagination.limit),
+      requests: this.adminService.getAllRequests(this.requestsPagination.page, this.requestsPagination.limit),
       events: this.eventService.getAllEvents(),
     }).subscribe({
       next: ({ donors, hospitals, requests, events }) => {
@@ -89,6 +103,9 @@ export class AdminDashboardComponent implements OnInit {
         this.hospitals = hospitals.hospitals || [];
         this.requests = requests.requests || [];
         this.events = events.events || [];
+        this.donorsPagination = donors.pagination || this.donorsPagination;
+        this.hospitalsPagination = hospitals.pagination || this.hospitalsPagination;
+        this.requestsPagination = requests.pagination || this.requestsPagination;
         this.isLoading = false;
       },
       error: (error) => {
@@ -99,22 +116,24 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadDonors(): void {
-    this.adminService.getAllUsers().subscribe({
+    this.adminService.getAllUsers(this.donorsPagination.page, this.donorsPagination.limit).subscribe({
       next: (response) => {
         this.donors = response.users || [];
+        this.donorsPagination = response.pagination || this.donorsPagination;
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load donors';
+        this.errorMessage = error?.error?.message || 'Failed to load donors.';
         this.isLoading = false;
       }
     });
   }
 
   loadHospitals(): void {
-    this.adminService.getAllHospitals().subscribe({
+    this.adminService.getAllHospitals(this.hospitalsPagination.page, this.hospitalsPagination.limit).subscribe({
       next: (response) => {
         this.hospitals = response.hospitals || [];
+        this.hospitalsPagination = response.pagination || this.hospitalsPagination;
       },
       error: (error) => {
         this.errorMessage = error.error?.message || 'Failed to load hospitals.';
@@ -123,9 +142,10 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadRequests(): void {
-    this.adminService.getAllRequests().subscribe({
+    this.adminService.getAllRequests(this.requestsPagination.page, this.requestsPagination.limit).subscribe({
       next: (response) => {
         this.requests = response.requests || [];
+        this.requestsPagination = response.pagination || this.requestsPagination;
       },
       error: (error) => {
         this.errorMessage = error.error?.message || 'Failed to load requests.';
@@ -155,7 +175,7 @@ export class AdminDashboardComponent implements OnInit {
           setTimeout(() => this.successMessage = '', 3000);
         },
         error: (error) => {
-          this.errorMessage = 'Failed to delete user';
+          this.errorMessage = error?.error?.message || 'Failed to delete user.';
           setTimeout(() => this.errorMessage = '', 3000);
         }
       });
@@ -174,7 +194,9 @@ export class AdminDashboardComponent implements OnInit {
       title: '',
       description: '',
       location: '',
-      date: ''
+      date: '',
+      bloodGroups: [],
+      capacity: 50,
     });
     this.editingEvent = null;
   }
@@ -185,12 +207,36 @@ export class AdminDashboardComponent implements OnInit {
       title: event.title,
       description: event.description,
       location: event.location,
-      date: typeof event.date === 'string' ? event.date.slice(0, 16) : new Date(event.date).toISOString().slice(0, 16)
+      date: typeof event.date === 'string' ? event.date.slice(0, 16) : new Date(event.date).toISOString().slice(0, 16),
+      bloodGroups: event.bloodGroups || [],
+      capacity: event.capacity || 50,
     });
     this.showEventForm = true;
   }
 
+  toggleBloodGroup(group: string): void {
+    const current = this.ef.bloodGroups.value || [];
+    const next = current.includes(group)
+      ? current.filter((item) => item !== group)
+      : [...current, group];
+
+    this.ef.bloodGroups.setValue(next);
+    this.ef.bloodGroups.markAsTouched();
+  }
+
+  isBloodGroupSelected(group: string): boolean {
+    return (this.ef.bloodGroups.value || []).includes(group);
+  }
+
   saveEvent(): void {
+    const selectedBloodGroups = this.ef.bloodGroups.value || [];
+
+    if (!Array.isArray(selectedBloodGroups) || selectedBloodGroups.length === 0) {
+      this.ef.bloodGroups.markAsTouched();
+      this.errorMessage = 'Please select at least one blood group.';
+      return;
+    }
+
     if (this.eventForm.invalid) {
       this.eventForm.markAllAsTouched();
       this.errorMessage = 'Please fix validation errors before saving the event.';
@@ -207,6 +253,8 @@ export class AdminDashboardComponent implements OnInit {
       description: this.ef.description.value?.trim() || '',
       location: this.ef.location.value?.trim() || '',
       date: this.ef.date.value || '',
+      bloodGroups: selectedBloodGroups,
+      capacity: Number(this.ef.capacity.value || 50),
     };
 
     if (this.editingEvent) {
@@ -262,6 +310,38 @@ export class AdminDashboardComponent implements OnInit {
 
   setActiveTab(tab: 'overview' | 'donors' | 'hospitals' | 'requests' | 'events'): void {
     this.activeTab = tab;
+
+    if (tab === 'donors') this.loadDonors();
+    if (tab === 'hospitals') this.loadHospitals();
+    if (tab === 'requests') this.loadRequests();
+    if (tab === 'events') this.loadEvents();
+  }
+
+  changeDonorPage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.donorsPagination.totalPages) {
+      return;
+    }
+
+    this.donorsPagination = { ...this.donorsPagination, page: nextPage };
+    this.loadDonors();
+  }
+
+  changeHospitalPage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.hospitalsPagination.totalPages) {
+      return;
+    }
+
+    this.hospitalsPagination = { ...this.hospitalsPagination, page: nextPage };
+    this.loadHospitals();
+  }
+
+  changeRequestPage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.requestsPagination.totalPages) {
+      return;
+    }
+
+    this.requestsPagination = { ...this.requestsPagination, page: nextPage };
+    this.loadRequests();
   }
 
   getStatusBadgeClass(status: string): string {

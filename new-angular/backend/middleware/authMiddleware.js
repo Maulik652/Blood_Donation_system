@@ -32,6 +32,11 @@ const protect = asyncHandler(async (req, res, next) => {
       throw new Error('Not authorized, user no longer exists');
     }
 
+    if (Number(decoded.tv || 0) !== Number(req.user.tokenVersion || 0)) {
+      res.status(401);
+      throw new Error('Session has been revoked. Please login again');
+    }
+
     next();
   } catch (error) {
     res.status(401);

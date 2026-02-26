@@ -7,7 +7,13 @@ import { Router } from '@angular/router';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const request = req.clone({ withCredentials: true });
+  const isMutation = !['GET', 'HEAD', 'OPTIONS'].includes(req.method.toUpperCase());
+  const csrfToken = authService.getCsrfToken();
+
+  const request = req.clone({
+    withCredentials: true,
+    setHeaders: isMutation && csrfToken ? { 'x-csrf-token': csrfToken } : {}
+  });
   const isAuthEndpoint = /\/users\/(login|register|logout)$/.test(req.url);
   const isLoginRoute = router.url.startsWith('/login');
   

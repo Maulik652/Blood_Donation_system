@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { generateCsrfToken } = require('../utils/csrf');
 const {
   sanitizeText,
   normalizeEmail,
@@ -10,8 +11,8 @@ const {
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
-const buildToken = (userId) =>
-  jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+const buildToken = (userId, tokenVersion) =>
+  jwt.sign({ id: userId, tv: Number(tokenVersion || 0) }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '7d',
   });
 
@@ -24,6 +25,18 @@ const buildCookieOptions = () => ({
 
 const setAuthCookie = (res, token) => {
   res.cookie('token', token, buildCookieOptions());
+};
+
+const sendAuthResponse = (res, user, statusCode = 200) => {
+  const token = buildToken(user._id, user.tokenVersion);
+  const csrfToken = generateCsrfToken(user);
+  setAuthCookie(res, token);
+
+  res.status(statusCode).json({
+    success: true,
+    user: sanitizeUser(user),
+    csrfToken,
+  });
 };
 
 const sanitizeUser = (user) => ({
@@ -90,13 +103,7 @@ const register = asyncHandler(async (req, res) => {
     location: cleanLocation,
   });
 
-  const token = buildToken(user._id);
-  setAuthCookie(res, token);
-
-  res.status(201).json({
-    success: true,
-    user: sanitizeUser(user),
-  });
+  sendAuthResponse(res, user, 201);
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -115,16 +122,21 @@ const login = asyncHandler(async (req, res) => {
     throw new Error('Invalid credentials');
   }
 
-  const token = buildToken(user._id);
-  setAuthCookie(res, token);
-
-  res.json({
-    success: true,
-    user: sanitizeUser(user),
-  });
+  sendAuthResponse(res, user);
 });
 
 const logout = asyncHandler(async (req, res) => {
+  const token = req.cookies?.token;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      await User.findByIdAndUpdate(decoded.id, { $inc: { tokenVersion: 1 } });
+    } catch (error) {
+      // Ignore invalid tokens during logout and continue cookie cleanup
+    }
+  }
+
   res.clearCookie('token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -145,6 +157,21 @@ const getProfile = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     user: sanitizeUser(user),
+    csrfToken: generateCsrfToken(user),
+  });
+});
+
+const getCsrfToken = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  res.json({
+    success: true,
+    csrfToken: generateCsrfToken(user),
   });
 });
 
@@ -170,6 +197,7 @@ const updateAvailability = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     user: sanitizeUser(updatedUser),
+    csrfToken: generateCsrfToken(updatedUser),
   });
 });
 
@@ -178,5 +206,6 @@ module.exports = {
   login,
   logout,
   getProfile,
+  getCsrfToken,
   updateAvailability,
 };
