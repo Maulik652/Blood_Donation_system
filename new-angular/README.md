@@ -2,6 +2,14 @@
 
 A comprehensive full-stack web application for managing blood donations, connecting donors with hospitals, and organizing donation events.
 
+## 🔎 Current Verification Status (February 26, 2026)
+
+- ✅ Backend installs, starts, and connects to MongoDB successfully.
+- ✅ Backend public endpoints respond correctly (`GET /` and `GET /api/events` returned `200`).
+- ✅ Frontend installs and builds successfully (`ng build`).
+- ✅ Frontend dev server runs and serves app successfully (`http://localhost:4200` returned `200`).
+- ✅ Frontend test configuration fixed and headless tests execute successfully (`1/1` passing smoke test).
+
 ## 🩸 Features
 
 ### For Guests
@@ -222,15 +230,19 @@ blood-donation-system/
 
 ## 🧪 Testing
 
-### Run Backend Tests
+### Backend Checks
 ```bash
 cd backend
-npm test
+npm install
+npm start
 ```
 
-### Run Frontend Tests
+> Note: No automated backend test script is currently defined in `backend/package.json`.
+
+### Frontend Checks
 ```bash
 cd frontend
+npm run build
 npm test
 ```
 

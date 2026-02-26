@@ -2,6 +2,16 @@
 
 ## Quick Start Guide
 
+## 🔎 Latest Verification (February 26, 2026)
+
+- ✅ Backend startup and MongoDB connection verified.
+- ✅ Backend public APIs verified (`/` and `/api/events` returned HTTP 200).
+- ✅ Frontend build and runtime verified.
+- ✅ Frontend test config verified and headless tests run successfully.
+
+### Frontend Test Note
+Current suite includes a smoke test to keep CI/test pipeline valid when no feature specs are present.
+
 ### Step 1: Install Prerequisites
 
 1. **Node.js** (v18 or higher)
@@ -138,6 +148,11 @@ Then run: node seedAdmin.js
 ```
 
 ### Frontend Issues
+
+**`ng test` Shows 0 Tests or TS Config Input Errors**:
+```
+Solution: Verify frontend/tsconfig.spec.json includes src/test.ts and does not exclude spec files.
+``` 
 
 **Port 4200 Already in Use**:
 ```
