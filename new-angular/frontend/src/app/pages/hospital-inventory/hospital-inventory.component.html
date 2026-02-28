@@ -1,0 +1,66 @@
+<div class="hospital-inventory page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Hospital / Inventory</p>
+        <h1>Blood Inventory Dashboard</h1>
+        <p class="muted">Real-time inventory overview generated from completed request fulfillment.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/hospital/create-request" class="chip">Create Request</a>
+        <a routerLink="/hospital/requests" class="chip">Requests</a>
+        <a routerLink="/hospital/inventory" class="chip chip-active">Inventory</a>
+        <a routerLink="/hospital/profile" class="chip">Profile</a>
+      </div>
+    </section>
+
+    <section class="stats-grid" *ngIf="!isLoading">
+      <div class="card stat-card">
+        <p>Total Units</p>
+        <h3>{{ totalUnits }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Completed Requests</p>
+        <h3>{{ completedRequests }}</h3>
+      </div>
+      <div class="card stat-card critical">
+        <p>Low Stock Groups</p>
+        <h3>{{ lowStockCount }}</h3>
+      </div>
+    </section>
+
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="card table-wrap" *ngIf="!isLoading && inventory.length > 0">
+      <h2>Blood Group Units</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Blood Group</th>
+              <th>Units</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of inventory">
+              <td><span class="blood-badge">{{ item.bloodGroup }}</span></td>
+              <td>{{ item.units }}</td>
+              <td>
+                <span class="badge" [ngClass]="item.units <= 1 ? 'badge-danger' : item.units <= 3 ? 'badge-warning' : 'badge-success'">
+                  {{ item.units <= 1 ? 'Critical' : item.units <= 3 ? 'Low' : 'Healthy' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>

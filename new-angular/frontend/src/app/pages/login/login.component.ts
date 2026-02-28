@@ -59,13 +59,13 @@ export class LoginComponent {
           return;
         }
 
-        const userRole = this.authService.getUserRole();
+        const userRole = this.authService.getRole();
 
         if (userRole === 'admin') {
           this.router.navigate(['/admin-dashboard']);
         } else if (userRole === 'hospital') {
           this.router.navigate(['/hospital-dashboard']);
-        } else if (userRole === 'user') {
+        } else if (userRole === 'donor') {
           this.router.navigate(['/donor-dashboard']);
         } else {
           this.router.navigate(['/']);

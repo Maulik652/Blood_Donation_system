@@ -9,6 +9,7 @@ router.use(requireCsrf);
 
 router.post('/create', authorizeRoles('hospital'), controller.createRequest);
 router.get('/my', authorizeRoles('hospital'), controller.getMyRequests);
+router.get('/inventory', authorizeRoles('hospital'), controller.getHospitalInventory);
 
 router.get('/available', authorizeRoles('user'), controller.getAvailableRequests);
 router.put('/:id/status', controller.updateRequestStatus);

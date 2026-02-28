@@ -61,6 +61,51 @@ const getMyRequests = asyncHandler(async (req, res) => {
   res.json({ success: true, requests });
 });
 
+const getHospitalInventory = asyncHandler(async (req, res) => {
+  if (req.user.role !== 'hospital') {
+    res.status(403);
+    throw new Error('Only hospitals can view inventory');
+  }
+
+  const aggregated = await Request.aggregate([
+    {
+      $match: {
+        hospital: req.user._id,
+        status: 'completed',
+      },
+    },
+    {
+      $group: {
+        _id: '$bloodGroup',
+        units: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const inventoryMap = new Map();
+  BLOOD_GROUPS.forEach((group) => inventoryMap.set(group, 0));
+
+  aggregated.forEach((item) => {
+    inventoryMap.set(item._id, item.units || 0);
+  });
+
+  const inventory = BLOOD_GROUPS.map((bloodGroup) => ({
+    bloodGroup,
+    units: inventoryMap.get(bloodGroup) || 0,
+  }));
+
+  const totalUnits = inventory.reduce((sum, item) => sum + item.units, 0);
+
+  res.json({
+    success: true,
+    inventory,
+    summary: {
+      totalUnits,
+      completedRequests: totalUnits,
+    },
+  });
+});
+
 const getAvailableRequests = asyncHandler(async (req, res) => {
   if (req.user.role !== 'user') {
     res.status(403);
@@ -358,6 +403,7 @@ const getDonationHistory = asyncHandler(async (req, res) => {
 module.exports = {
   createRequest,
   getMyRequests,
+  getHospitalInventory,
   getAvailableRequests,
   updateRequestStatus,
   getDonationHistory,

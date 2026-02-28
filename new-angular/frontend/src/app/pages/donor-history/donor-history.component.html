@@ -1,0 +1,72 @@
+<div class="donor-history page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Donor / History</p>
+        <h1>Your Donation Journey</h1>
+        <p class="muted">Track completed donations and contribution impact over time.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/donor/donate" class="chip">Donate</a>
+        <a routerLink="/donor/requests" class="chip">Requests</a>
+        <a routerLink="/donor/history" class="chip chip-active">History</a>
+        <a routerLink="/donor/profile" class="chip">Profile</a>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="card stat-card">
+        <p>Total Records</p>
+        <h3>{{ history.length }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Completed Donations</p>
+        <h3>{{ totalCompleted }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Estimated Lives Impacted</p>
+        <h3>{{ livesImpacted }}</h3>
+      </div>
+    </section>
+
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="card data-wrap" *ngIf="!isLoading && history.length > 0">
+      <h2>Donation History</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Hospital</th>
+              <th>Blood Group</th>
+              <th>Urgency</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of history">
+              <td>{{ item.hospital?.name || 'N/A' }}</td>
+              <td><span class="blood-badge">{{ item.bloodGroup }}</span></td>
+              <td>{{ item.urgency || 'N/A' }}</td>
+              <td>
+                <span class="badge" [ngClass]="item.status === 'completed' ? 'badge-success' : item.status === 'accepted' ? 'badge-info' : item.status === 'rejected' ? 'badge-danger' : 'badge-warning'">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td>{{ item.completedAt || item.updatedAt || item.createdAt | date:'mediumDate' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="empty-state" *ngIf="!isLoading && history.length === 0">No donation history found yet.</div>
+  </div>
+</div>

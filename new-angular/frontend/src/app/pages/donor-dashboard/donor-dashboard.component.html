@@ -17,6 +17,10 @@
         <span class="blood">{{ user?.bloodGroup || 'N/A' }}</span>
       </div>
       <div class="identity-item">
+        <span class="identity-label">Last Donation Date</span>
+        <span class="countdown">{{ getLastDonationDate() }}</span>
+      </div>
+      <div class="identity-item">
         <span class="identity-label">Eligibility</span>
         <span class="badge" [ngClass]="getEligibility() ? 'eligible' : 'not-eligible'">
           {{ getEligibility() ? 'Eligible to Donate' : 'Cooling Period' }}
@@ -38,34 +42,44 @@
   <section class="zone">
     <div class="zone-head compact">
       <p class="zone-kicker">Impact Zone</p>
-      <h3>Contribution & Motivation</h3>
+      <h3>Your Donation Snapshot</h3>
     </div>
 
     <div class="grid stats-grid">
     <div class="card stat">
       <h3>{{ stats.totalDonations }}</h3>
       <p>Total Donations</p>
-      <small class="muted">Your consistent action saves lives.</small>
+      <small class="muted">Your life-saving contributions so far.</small>
     </div>
 
     <div class="card stat">
-      <h3>{{ stats.livesSaved }}</h3>
-      <p>Lives Saved</p>
-      <small class="muted">Estimated impact based on completed donations.</small>
+      <h3>{{ stats.completedRequests }}</h3>
+      <p>Completed Requests</p>
+      <small class="muted">Successfully fulfilled emergency requests.</small>
     </div>
 
     <div class="card stat">
-      <h3>{{ stats.responseRate }}%</h3>
-      <p>Response Rate</p>
-      <small class="muted">A strong reliability indicator for hospitals.</small>
+      <h3>{{ getEligibility() ? 0 : stats.eligibilityDaysLeft }}</h3>
+      <p>Eligibility Days Left</p>
+      <small class="muted">Days remaining before next safe donation.</small>
     </div>
 
     <div class="card stat motivational">
-      <h3>Mission Ready</h3>
-      <p>Every timely response builds trust in emergency care.</p>
-      <span class="badge badge-info">Community Impact Enabled</span>
+      <h3>{{ stats.livesSaved }}</h3>
+      <p>Lives Saved</p>
+      <span class="badge badge-info">Impact Multiplier</span>
     </div>
   </div>
+
+    <div class="card progress-card">
+      <h3>Eligibility Progress</h3>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="getEligibilityProgress()"></div>
+        </div>
+        <span class="progress-meta">{{ getEligibilityProgress() }}% of 90-day cycle completed</span>
+      </div>
+    </div>
   </section>
 
   <section class="zone">
@@ -164,6 +178,17 @@
     <div class="zone-head compact">
       <p class="zone-kicker">History Zone</p>
       <h3>Donation History</h3>
+    </div>
+
+    <div class="card chart-card">
+      <h3>Donations Per Month</h3>
+      <div class="chart" *ngIf="monthlyDonations.length > 0">
+        <div class="bar-group" *ngFor="let month of monthlyDonations">
+          <div class="bar" [style.height.px]="month.height"></div>
+          <span class="value">{{ month.count }}</span>
+          <span class="label">{{ month.label }}</span>
+        </div>
+      </div>
     </div>
 
     <div class="card">

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Event, CreateEventData } from '../models/event.model';
+import { Event, CreateEventData, PostponeEventData } from '../models/event.model';
 
 interface EventItemResponse {
   success: boolean;
@@ -37,6 +37,18 @@ export class EventService {
 
   deleteEvent(eventId: string): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(`${this.apiUrl}/events/${eventId}`);
+  }
+
+  startEvent(eventId: string): Observable<EventItemResponse> {
+    return this.http.patch<EventItemResponse>(`${this.apiUrl}/events/${eventId}/start`, {});
+  }
+
+  endEvent(eventId: string): Observable<EventItemResponse> {
+    return this.http.patch<EventItemResponse>(`${this.apiUrl}/events/${eventId}/end`, {});
+  }
+
+  postponeEvent(eventId: string, data: PostponeEventData): Observable<EventItemResponse> {
+    return this.http.patch<EventItemResponse>(`${this.apiUrl}/events/${eventId}/postpone`, data);
   }
 
   registerForEvent(eventId: string): Observable<{ success: boolean; message: string }> {

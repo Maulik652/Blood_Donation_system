@@ -4,7 +4,8 @@ export interface User {
   email: string;
   password?: string;
   age: number;
-  role: 'user' | 'hospital' | 'admin';
+  role: 'user' | 'donor' | 'hospital' | 'admin';
+  hospitalApproved?: boolean;
   phone: string;
   bloodGroup: string;
   location: string;
@@ -36,7 +37,7 @@ export interface RegisterData {
   email: string;
   password: string;
   age: number;
-  role: 'user' | 'hospital';
+  role: 'user' | 'donor' | 'hospital';
   phone: string;
   bloodGroup: string;
   location: string;

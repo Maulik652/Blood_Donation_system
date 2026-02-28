@@ -3,7 +3,7 @@
 }
 
 .events-hero {
-  padding: 70px 0 38px;
+  padding: 64px 0 32px;
   text-align: center;
 }
 
@@ -26,9 +26,8 @@
 
 .event-card {
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  background: #fff;
   overflow: hidden;
   box-shadow: var(--shadow-md);
   transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-medium);
@@ -94,4 +93,14 @@
 
 .btn-block {
   margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+  .events-hero {
+    padding: 44px 0 24px;
+  }
+
+  .event-image {
+    height: 160px;
+  }
 }

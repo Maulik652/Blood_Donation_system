@@ -1,0 +1,15 @@
+.donor-history { padding-top: 24px; }
+.hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
+.hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
+.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.stat-card { padding: 16px; text-align: center; }
+.stat-card p { color: var(--text-secondary); font-size: 0.84rem; }
+.stat-card h3 { margin-top: 6px; color: var(--primary-600); font-size: 1.6rem; }
+.data-wrap { padding: 18px; }
+.data-wrap h2 { font-size: 1.04rem; margin-bottom: 12px; }
+.empty-state { text-align: center; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; color: var(--text-secondary); }
+@media (max-width: 860px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,59 @@
+<div class="donor-donate page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Donor / Donate</p>
+        <h1>Join Live Donation Events</h1>
+        <p class="muted">Choose events that match your blood group and reserve your donation slot instantly.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/donor/donate" class="chip chip-active">Donate</a>
+        <a routerLink="/donor/requests" class="chip">Requests</a>
+        <a routerLink="/donor/history" class="chip">History</a>
+        <a routerLink="/donor/profile" class="chip">Profile</a>
+      </div>
+    </section>
+
+    <div *ngIf="!isEligible" class="alert alert-info">
+      You are in cooldown period. Eligible again in {{ daysLeft }} day(s).
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="grid grid-3" *ngIf="!isLoading && events.length > 0">
+      <article class="card event-card" *ngFor="let event of events">
+        <div class="event-head">
+          <h3>{{ event.title }}</h3>
+          <span class="badge" [ngClass]="event.status === 'postponed' ? 'badge-warning' : event.status === 'live' ? 'badge-danger' : 'badge-success'">
+            {{ event.status || 'scheduled' }}
+          </span>
+        </div>
+
+        <p>{{ event.description }}</p>
+
+        <div class="event-meta">
+          <p><strong>📍</strong> {{ event.location }}</p>
+          <p><strong>📅</strong> {{ event.date | date:'medium' }}</p>
+          <p><strong>👥</strong> {{ event.registeredCount || 0 }} / {{ event.capacity || 0 }} registered</p>
+        </div>
+
+        <div class="blood-wrap" *ngIf="event.bloodGroups?.length">
+          <span class="blood-badge" *ngFor="let group of event.bloodGroups">{{ group }}</span>
+        </div>
+
+        <button class="btn btn-primary btn-block" [disabled]="!canRegister(event)" (click)="register(event._id!)">
+          {{ canRegister(event) ? 'Register for Event' : 'Unavailable' }}
+        </button>
+      </article>
+    </section>
+
+    <div class="empty-state" *ngIf="!isLoading && events.length === 0">No active events available right now.</div>
+  </div>
+</div>

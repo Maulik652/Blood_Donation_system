@@ -15,6 +15,15 @@ interface RequestListResponse {
   requests: Request[];
 }
 
+interface HospitalInventoryResponse {
+  success: boolean;
+  inventory: { bloodGroup: string; units: number }[];
+  summary: {
+    totalUnits: number;
+    completedRequests: number;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +38,10 @@ export class RequestService {
 
   getMyRequests(): Observable<RequestListResponse> {
     return this.http.get<RequestListResponse>(`${this.apiUrl}/requests/my`);
+  }
+
+  getHospitalInventory(): Observable<HospitalInventoryResponse> {
+    return this.http.get<HospitalInventoryResponse>(`${this.apiUrl}/requests/inventory`);
   }
 
   getAvailableRequests(): Observable<RequestListResponse> {

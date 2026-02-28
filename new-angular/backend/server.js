@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
-const { errorHandler } = require('./middleware/errorMiddleware');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Load env vars
 dotenv.config();
@@ -62,18 +62,19 @@ app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
 // Routes
+app.get('/', (req, res) => {
+  res.json({ message: 'Blood Donation Management System API' });
+});
+
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/requests', require('./routes/requestRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
 
+app.use(notFound);
+
 // Error handler
 app.use(errorHandler);
-
-// Root route
-app.get('/', (req, res) => {
-  res.json({ message: 'Blood Donation Management System API' });
-});
 
 const PORT = process.env.PORT || 5000;
 

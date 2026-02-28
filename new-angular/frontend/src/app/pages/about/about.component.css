@@ -6,12 +6,12 @@
 .section,
 .stats,
 .cta {
-  padding: 72px 0;
+  padding: 64px 0;
 }
 
 .hero {
   text-align: center;
-  background: #fff;
+  background: linear-gradient(180deg, #fff 0%, #fff5f5 100%);
 }
 
 .hero h1 {
@@ -46,7 +46,7 @@
 .steps,
 .tech-grid {
   display: grid;
-  gap: 16px;
+  gap: 20px;
 }
 
 .stats-grid {
@@ -57,9 +57,9 @@
 .feature,
 .step,
 .tech {
-  background: rgba(255, 255, 255, 0.88);
+  background: #fff;
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-medium);
 }
@@ -74,7 +74,7 @@
 }
 
 .stat-card {
-  padding: 24px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -94,7 +94,7 @@
 }
 
 .feature {
-  padding: 18px;
+  padding: 20px;
   color: var(--text-primary);
   font-weight: 500;
 }
@@ -105,7 +105,7 @@
 }
 
 .step {
-  padding: 22px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -132,7 +132,7 @@
 }
 
 .tech {
-  padding: 14px;
+  padding: 20px;
   text-align: center;
   color: var(--text-primary);
   font-weight: 600;

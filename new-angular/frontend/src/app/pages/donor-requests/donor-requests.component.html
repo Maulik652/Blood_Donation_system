@@ -1,0 +1,52 @@
+<div class="donor-requests page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Donor / Requests</p>
+        <h1>Emergency Request Queue</h1>
+        <p class="muted">Review nearby blood requests and respond quickly to save lives.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/donor/donate" class="chip">Donate</a>
+        <a routerLink="/donor/requests" class="chip chip-active">Requests</a>
+        <a routerLink="/donor/history" class="chip">History</a>
+        <a routerLink="/donor/profile" class="chip">Profile</a>
+      </div>
+    </section>
+
+    <div class="card stats">
+      <p><strong>Total Available:</strong> {{ requests.length }}</p>
+      <p><strong>Critical:</strong> {{ criticalCount }}</p>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="list" *ngIf="!isLoading && requests.length > 0">
+      <article class="card request-item" *ngFor="let req of requests">
+        <div>
+          <h3>{{ req.hospital?.name || 'Hospital' }}</h3>
+          <p class="muted">{{ req.message }}</p>
+          <small class="meta">📍 {{ req.hospital?.location || 'N/A' }} · 📞 {{ req.hospital?.phone || 'N/A' }}</small>
+        </div>
+
+        <div class="meta-right">
+          <span class="blood-badge">{{ req.bloodGroup }}</span>
+          <span class="urgency-chip" [ngClass]="(req.urgency || '').toLowerCase()">{{ req.urgency || 'Medium' }}</span>
+          <div class="actions">
+            <button class="btn btn-primary" (click)="acceptRequest(req._id!)">Accept</button>
+            <button class="btn btn-secondary" (click)="hideRequest(req._id!)">Skip</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="empty-state" *ngIf="!isLoading && requests.length === 0">No active requests currently available.</div>
+  </div>
+</div>

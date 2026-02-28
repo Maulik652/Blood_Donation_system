@@ -1,0 +1,61 @@
+<div class="hospital-profile page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Hospital / Profile</p>
+        <h1>Hospital Profile Center</h1>
+        <p class="muted">View organization details and operational request insights.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/hospital/create-request" class="chip">Create Request</a>
+        <a routerLink="/hospital/requests" class="chip">Requests</a>
+        <a routerLink="/hospital/inventory" class="chip">Inventory</a>
+        <a routerLink="/hospital/profile" class="chip chip-active">Profile</a>
+      </div>
+    </section>
+
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="grid grid-2" *ngIf="!isLoading && profile">
+      <article class="card profile-card">
+        <h2>Hospital Details</h2>
+        <div class="profile-grid">
+          <p><strong>Name:</strong> {{ profile.name }}</p>
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+          <p><strong>Phone:</strong> {{ profile.phone }}</p>
+          <p><strong>Location:</strong> {{ profile.location }}</p>
+          <p><strong>Blood Group Focus:</strong> <span class="blood-badge">{{ profile.bloodGroup }}</span></p>
+          <p><strong>Approval:</strong>
+            <span class="badge" [ngClass]="profile.hospitalApproved ? 'badge-success' : 'badge-warning'">
+              {{ profile.hospitalApproved ? 'Approved' : 'Pending Approval' }}
+            </span>
+          </p>
+        </div>
+      </article>
+
+      <article class="card stats-card">
+        <h2>Operational Snapshot</h2>
+        <div class="metric-grid">
+          <div class="metric">
+            <span>Total Requests</span>
+            <strong>{{ totalRequests }}</strong>
+          </div>
+          <div class="metric">
+            <span>Active</span>
+            <strong>{{ activeRequests }}</strong>
+          </div>
+          <div class="metric">
+            <span>Completed</span>
+            <strong>{{ completedRequests }}</strong>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>

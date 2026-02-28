@@ -1,0 +1,123 @@
+<div class="admin-reports page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Admin / Reports</p>
+        <h1>Executive Reports Center</h1>
+        <p class="muted">Live operational analytics for user growth, hospital response, and blood request outcomes.</p>
+      </div>
+
+      <div class="hero-actions">
+        <a routerLink="/admin-dashboard" class="chip">Dashboard</a>
+        <a routerLink="/admin/users" class="chip">Users</a>
+        <a routerLink="/admin/hospitals" class="chip">Hospitals</a>
+        <a routerLink="/admin/requests" class="chip">Requests</a>
+        <button class="btn btn-primary" (click)="exportCsv()">Export CSV</button>
+      </div>
+    </section>
+
+    <div class="meta-line">Generated: {{ generatedAt | date:'medium' }}</div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line w-50"></div>
+    </div>
+
+    <section class="stats-grid" *ngIf="!isLoading">
+      <div class="card stat-card">
+        <p>Total Users</p>
+        <h3>{{ totalUsers }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Total Donors</p>
+        <h3>{{ totalDonors }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Total Hospitals</p>
+        <h3>{{ totalHospitals }}</h3>
+      </div>
+      <div class="card stat-card critical">
+        <p>Acceptance Rate</p>
+        <h3>{{ acceptanceRate }}%</h3>
+      </div>
+    </section>
+
+    <section class="grid grid-2" *ngIf="!isLoading">
+      <div class="card panel">
+        <h2>Request Status Distribution</h2>
+        <div class="status-list" *ngIf="statusSeries.length > 0">
+          <div class="status-row" *ngFor="let item of statusSeries">
+            <div class="status-label">{{ item.label | titlecase }}</div>
+            <div class="track">
+              <div class="fill" [ngClass]="item.css" [style.width.%]="item.width"></div>
+            </div>
+            <strong>{{ item.count }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <h2>Blood Group Demand</h2>
+        <div class="blood-grid" *ngIf="bloodGroupSeries.length > 0">
+          <div class="blood-item" *ngFor="let item of bloodGroupSeries">
+            <span class="blood-badge">{{ item.group }}</span>
+            <strong>{{ item.count }}</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-2 mt-2" *ngIf="!isLoading">
+      <div class="card panel">
+        <h2>Top Hospitals by Requests</h2>
+        <div class="table-responsive" *ngIf="hospitalSeries.length > 0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Hospital</th>
+                <th>Requests</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of hospitalSeries">
+                <td>{{ item.name }}</td>
+                <td>{{ item.count }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <h2>Recent Critical Alerts</h2>
+        <div class="table-responsive" *ngIf="recentCriticalRequests.length > 0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Hospital</th>
+                <th>Blood</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let req of recentCriticalRequests">
+                <td>{{ req.hospital?.name || 'N/A' }}</td>
+                <td><span class="blood-badge">{{ req.bloodGroup }}</span></td>
+                <td><span class="badge badge-danger">{{ req.status }}</span></td>
+                <td>{{ req.createdAt | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="recentCriticalRequests.length === 0" class="empty-state">
+          No critical requests in current report snapshot.
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

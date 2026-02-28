@@ -34,6 +34,7 @@ const sendAuthResponse = (res, user, statusCode = 200) => {
 
   res.status(statusCode).json({
     success: true,
+    token,
     user: sanitizeUser(user),
     csrfToken,
   });
@@ -45,6 +46,7 @@ const sanitizeUser = (user) => ({
   email: user.email,
   age: user.age,
   role: user.role,
+  hospitalApproved: user.hospitalApproved,
   phone: user.phone,
   bloodGroup: user.bloodGroup,
   location: user.location,

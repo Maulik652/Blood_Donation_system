@@ -56,6 +56,13 @@
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   padding: 12px;
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.identity-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.14);
+  box-shadow: var(--shadow-sm);
 }
 
 .identity-item strong {
@@ -78,6 +85,43 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
+  margin-bottom: 14px;
+}
+
+.inventory-card h3 {
+  margin-bottom: 12px;
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.inventory-item {
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.inventory-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.14);
+  box-shadow: var(--shadow-sm);
+}
+
+.inventory-item strong {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+}
+
+.inventory-table {
+  margin-top: 16px;
 }
 
 .stat-box {
@@ -132,7 +176,7 @@
   border: 1px solid var(--border-subtle);
   background: #fff;
   padding: 15px;
-  transition: all var(--transition-fast);
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
 }
 
 .request-card.critical-focus {
@@ -199,6 +243,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.status-chip {
+  text-transform: capitalize;
 }
 
 .trust-card {

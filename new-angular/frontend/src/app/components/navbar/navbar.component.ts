@@ -21,6 +21,36 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   dashboardRoute = '/';   // ✅ Required for polished HTML
 
+  readonly menuConfig: Record<'guest' | 'donor' | 'hospital' | 'admin', { label: string; route: string }[]> = {
+    guest: [
+      { label: 'Home', route: '/home' },
+      { label: 'About', route: '/about' },
+      { label: 'Events', route: '/events' },
+      { label: 'Contact', route: '/contact' },
+    ],
+    donor: [
+      { label: 'Dashboard', route: '/donor-dashboard' },
+      { label: 'Donate', route: '/donor/donate' },
+      { label: 'Requests', route: '/donor/requests' },
+      { label: 'History', route: '/donor/history' },
+      { label: 'Profile', route: '/donor/profile' },
+    ],
+    hospital: [
+      { label: 'Dashboard', route: '/hospital-dashboard' },
+      { label: 'Create Request', route: '/hospital/create-request' },
+      { label: 'Requests', route: '/hospital/requests' },
+      { label: 'Inventory', route: '/hospital/inventory' },
+      { label: 'Profile', route: '/hospital/profile' },
+    ],
+    admin: [
+      { label: 'Dashboard', route: '/admin-dashboard' },
+      { label: 'Users', route: '/admin/users' },
+      { label: 'Hospitals', route: '/admin/hospitals' },
+      { label: 'Requests', route: '/admin/requests' },
+      { label: 'Reports', route: '/admin/reports' },
+    ]
+  };
+
   constructor(
     private authService: AuthService,
     private router: Router
@@ -31,7 +61,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
 
       this.isLoggedIn = this.authService.isLoggedIn();
-      this.userRole = this.authService.getUserRole();
+      this.userRole = this.authService.getRole();
       this.userName = user?.name || '';
 
       this.setDashboardRoute();   // ✅ Centralized role logic
@@ -56,6 +86,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
     };
 
     this.dashboardRoute = ROLE_ROUTES[this.userRole!] || '/';
+  }
+
+  get navLinks(): { label: string; route: string }[] {
+    const role = (this.userRole as 'guest' | 'donor' | 'hospital' | 'admin' | null) || 'guest';
+    return this.menuConfig[role] || this.menuConfig.guest;
+  }
+
+  get displayIdentity(): string {
+    if (this.userName) {
+      return this.userName;
+    }
+
+    if (this.userRole === 'hospital') {
+      return 'Hospital';
+    }
+
+    if (this.userRole === 'admin') {
+      return 'Admin';
+    }
+
+    return 'Donor';
   }
 
   toggleMenu(): void {

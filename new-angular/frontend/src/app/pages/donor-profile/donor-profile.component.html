@@ -1,0 +1,56 @@
+<div class="donor-profile page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Donor / Profile</p>
+        <h1>Donor Identity & Availability</h1>
+        <p class="muted">Manage your donor profile visibility and donation readiness status.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/donor/donate" class="chip">Donate</a>
+        <a routerLink="/donor/requests" class="chip">Requests</a>
+        <a routerLink="/donor/history" class="chip">History</a>
+        <a routerLink="/donor/profile" class="chip chip-active">Profile</a>
+      </div>
+    </section>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="grid grid-2" *ngIf="!isLoading && user">
+      <article class="card profile-card">
+        <h2>Personal Details</h2>
+        <div class="profile-grid">
+          <p><strong>Name:</strong> {{ user.name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Phone:</strong> {{ user.phone }}</p>
+          <p><strong>Age:</strong> {{ user.age }}</p>
+          <p><strong>Blood Group:</strong> <span class="blood-badge">{{ user.bloodGroup }}</span></p>
+          <p><strong>Location:</strong> {{ user.location }}</p>
+        </div>
+      </article>
+
+      <article class="card status-card">
+        <h2>Donation Status</h2>
+        <p><strong>Availability:</strong>
+          <span class="badge" [ngClass]="user.isAvailable ? 'badge-success' : 'badge-warning'">
+            {{ user.isAvailable ? 'Available' : 'Unavailable' }}
+          </span>
+        </p>
+        <p><strong>Total Donations:</strong> {{ user.totalDonations || 0 }}</p>
+        <p><strong>Eligibility:</strong> {{ eligibility }}</p>
+        <p><strong>Last Donation:</strong> {{ user.lastDonationDate ? (user.lastDonationDate | date:'mediumDate') : 'N/A' }}</p>
+
+        <button class="btn btn-primary" [disabled]="isSaving" (click)="toggleAvailability()">
+          {{ isSaving ? 'Updating...' : (user.isAvailable ? 'Set Unavailable' : 'Set Available') }}
+        </button>
+      </article>
+    </section>
+  </div>
+</div>

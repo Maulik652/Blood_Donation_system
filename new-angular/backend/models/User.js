@@ -41,6 +41,13 @@ const userSchema = new Schema(
       default: "user",
     },
 
+    hospitalApproved: {
+      type: Boolean,
+      default: function () {
+        return this.role !== 'hospital';
+      },
+    },
+
     phone: {
       type: String,
       required: true,

@@ -179,10 +179,39 @@ const deleteUser = asyncHandler(async (req, res) => {
   });
 });
 
+const approveHospital = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400);
+    throw new Error('Invalid hospital id');
+  }
+
+  const hospital = await User.findOne({ _id: req.params.id, role: 'hospital' });
+
+  if (!hospital) {
+    res.status(404);
+    throw new Error('Hospital not found');
+  }
+
+  if (hospital.hospitalApproved) {
+    res.status(200).json({ success: true, message: 'Hospital already approved', hospital });
+    return;
+  }
+
+  hospital.hospitalApproved = true;
+  await hospital.save();
+
+  res.json({
+    success: true,
+    message: 'Hospital approved successfully',
+    hospital,
+  });
+});
+
 // @desc    Get statistics
 // @route   GET /api/admin/statistics
 // @access  Private (Admin)
 const getStatistics = asyncHandler(async (req, res) => {
+  const totalUsers = await User.countDocuments();
   const totalDonors = await User.countDocuments({ role: 'user' });
   const totalHospitals = await User.countDocuments({ role: 'hospital' });
   const totalRequests = await Request.countDocuments();
@@ -191,6 +220,7 @@ const getStatistics = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     statistics: {
+      totalUsers,
       totalDonors,
       totalHospitals,
       totalRequests,
@@ -204,5 +234,6 @@ module.exports = {
   getAllHospitals,
   getAllRequests,
   deleteUser,
+  approveHospital,
   getStatistics
 };

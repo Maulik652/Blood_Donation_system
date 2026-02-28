@@ -2,7 +2,7 @@
   min-height: calc(100vh - 170px);
   display: flex;
   align-items: center;
-  padding: 34px 0;
+  padding: 24px 0;
 }
 
 .login-container {
@@ -14,10 +14,9 @@
 .login-card {
   width: 100%;
   max-width: 430px;
-  padding: 34px;
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-md);
 }
@@ -30,7 +29,7 @@
 .subtitle {
   color: var(--text-secondary);
   font-size: 0.9rem;
-  margin: 4px 0 20px;
+  margin: 4px 0 16px;
 }
 
 .btn-primary {
@@ -71,8 +70,8 @@
 
 @media (max-width: 600px) {
   .login-card {
-    padding: 24px;
-    border-radius: 16px;
+    padding: 20px;
+    border-radius: 12px;
   }
 
   .login-card h2 {

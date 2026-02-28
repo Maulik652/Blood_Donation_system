@@ -53,23 +53,23 @@
       <div class="grid grid-4">
         <div class="stat-card">
           <div class="stat-icon">👥</div>
+          <div class="stat-number">{{ statistics.totalUsers }}</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🩸</div>
           <div class="stat-number">{{ statistics.totalDonors }}</div>
           <div class="stat-label">Total Donors</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🏥</div>
           <div class="stat-number">{{ statistics.totalHospitals }}</div>
-          <div class="stat-label">Connected Hospitals</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📋</div>
-          <div class="stat-number">{{ pendingRequestsCount }}</div>
-          <div class="stat-label">Pending Requests</div>
+          <div class="stat-label">Total Hospitals</div>
         </div>
         <div class="stat-card" [class.critical-card]="criticalRequestsCount > 0">
-          <div class="stat-icon">🚨</div>
-          <div class="stat-number">{{ criticalRequestsCount }}</div>
-          <div class="stat-label">Critical Cases</div>
+          <div class="stat-icon">📋</div>
+          <div class="stat-number">{{ statistics.totalRequests }}</div>
+          <div class="stat-label">Total Requests</div>
         </div>
       </div>
     </section>
@@ -117,6 +117,13 @@
         Events ({{ events.length }})
       </button>
       </div>
+
+      <div class="quick-nav">
+        <a routerLink="/admin/users" class="chip">Open Users Page</a>
+        <a routerLink="/admin/hospitals" class="chip">Open Hospitals Page</a>
+        <a routerLink="/admin/requests" class="chip">Open Requests Page</a>
+        <a routerLink="/admin/reports" class="chip">Open Reports Page</a>
+      </div>
     </section>
 
     <!-- Overview Tab -->
@@ -132,6 +139,54 @@
         <p class="muted mt-2">
           Keep the request pipeline reliable by prioritizing critical and pending cases.
         </p>
+      </div>
+
+      <div class="grid grid-2 mt-2">
+        <div class="card">
+          <h3>Users Growth</h3>
+          <div class="chart-vertical" *ngIf="userGrowthSeries.length > 0">
+            <div class="bar-col" *ngFor="let point of userGrowthSeries">
+              <div class="bar" [style.height.px]="point.height"></div>
+              <strong>{{ point.value }}</strong>
+              <span>{{ point.label }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Requests by Blood Group</h3>
+          <div class="chart-horizontal" *ngIf="requestBloodGroupSeries.length > 0">
+            <div class="row" *ngFor="let point of requestBloodGroupSeries">
+              <span class="blood-badge">{{ point.bloodGroup }}</span>
+              <div class="line-track"><div class="line-fill" [style.width.%]="point.width"></div></div>
+              <strong>{{ point.count }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h3>Recent Activity</h3>
+        <div class="table-responsive" *ngIf="recentActivity.length > 0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Hospital</th>
+                <th>Blood Group</th>
+                <th>Status</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of recentActivity">
+                <td>{{ item.hospital?.name || 'N/A' }}</td>
+                <td><span class="blood-badge">{{ item.bloodGroup }}</span></td>
+                <td><span [class]="'badge ' + getStatusBadgeClass(item.status)">{{ item.status }}</span></td>
+                <td>{{ item.updatedAt || item.createdAt | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -189,6 +244,7 @@
               <th>Email</th>
               <th>Phone</th>
               <th>Location</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -199,6 +255,18 @@
               <td>{{ hospital.phone }}</td>
               <td>{{ hospital.location }}</td>
               <td>
+                <span class="badge" [ngClass]="hospital.hospitalApproved ? 'badge-success' : 'badge-warning'">
+                  {{ hospital.hospitalApproved ? 'Approved' : 'Pending Approval' }}
+                </span>
+              </td>
+              <td>
+                <button
+                  class="btn btn-secondary"
+                  *ngIf="!hospital.hospitalApproved"
+                  (click)="approveHospital(hospital._id!)"
+                >
+                  Approve
+                </button>
                 <button class="btn-delete" (click)="deleteUser(hospital._id!)">Delete</button>
               </td>
             </tr>
@@ -360,13 +428,25 @@
 
       <div class="grid grid-3 mt-3" *ngIf="events.length > 0">
         <div class="card event-card" *ngFor="let event of events">
-          <h3>{{ event.title }}</h3>
+          <div class="event-head">
+            <h3>{{ event.title }}</h3>
+            <span class="badge" [ngClass]="getEventStatusClass(event.status)">
+              {{ event.status || 'scheduled' }}
+            </span>
+          </div>
           <p>{{ event.description }}</p>
           <div class="event-details">
             <p><strong>📍</strong> {{ event.location }}</p>
             <p><strong>📅</strong> {{ event.date | date:'medium' }}</p>
+            <p *ngIf="event.postponedFrom"><strong>⏮ Previous Date:</strong> {{ event.postponedFrom | date:'medium' }}</p>
+            <p *ngIf="event.startedAt"><strong>🟢 Started:</strong> {{ event.startedAt | date:'short' }}</p>
+            <p *ngIf="event.endedAt"><strong>⚪ Ended:</strong> {{ event.endedAt | date:'short' }}</p>
+            <p *ngIf="event.postponeReason"><strong>📝 Postpone Note:</strong> {{ event.postponeReason }}</p>
           </div>
           <div class="event-actions">
+            <button class="btn btn-primary" *ngIf="canStartEvent(event)" (click)="startEvent(event)">Start</button>
+            <button class="btn btn-secondary" *ngIf="canEndEvent(event)" (click)="endEvent(event)">End</button>
+            <button class="btn btn-secondary" *ngIf="canPostponeEvent(event)" (click)="postponeEvent(event)">Postpone</button>
             <button class="btn btn-secondary" (click)="editEvent(event)">Edit</button>
             <button class="btn-delete" (click)="deleteEvent(event._id!)">Delete</button>
           </div>

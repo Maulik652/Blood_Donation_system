@@ -52,6 +52,13 @@
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   padding: 12px;
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.identity-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.14);
+  box-shadow: var(--shadow-sm);
 }
 
 .identity-label {
@@ -66,6 +73,16 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 28px;
+}
+
+.quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-nav .chip {
+  text-decoration: none;
 }
 
 .tab-button {
@@ -202,9 +219,14 @@
   transition: all var(--transition-fast);
 }
 
+td .btn {
+  margin-right: 8px;
+}
+
 .btn-delete:hover {
   background: var(--danger-bg);
   border-color: #fca5a5;
+  transform: translateY(-1px);
 }
 
 .events-header {
@@ -234,11 +256,25 @@
 
 .event-card {
   padding: 20px;
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(220, 38, 38, 0.14);
 }
 
 .event-card h3 {
   color: var(--text-primary);
   font-size: 1.05rem;
+}
+
+.event-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .event-card p {
@@ -260,11 +296,71 @@
 .event-actions {
   margin-top: 14px;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .trust-panel {
   padding: 18px 20px;
+}
+
+.chart-vertical {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  min-height: 170px;
+  align-items: end;
+}
+
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.bar-col .bar {
+  width: 36px;
+  border-radius: 12px 12px 6px 6px;
+  background: linear-gradient(180deg, #ef5350 0%, #E53935 100%);
+}
+
+.bar-col strong {
+  font-size: 0.86rem;
+}
+
+.bar-col span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.chart-horizontal {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-horizontal .row {
+  display: grid;
+  grid-template-columns: 58px 1fr 30px;
+  gap: 10px;
+  align-items: center;
+}
+
+.line-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.line-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #E53935;
 }
 
 .trust-cues {
@@ -306,6 +402,10 @@
   .events-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .quick-nav {
+    width: 100%;
   }
 
   .form-row {

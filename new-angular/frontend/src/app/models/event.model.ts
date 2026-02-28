@@ -20,6 +20,16 @@ export interface Event {
 
   capacity?: number;
 
+  status?: 'scheduled' | 'live' | 'postponed' | 'ended';
+
+  startedAt?: string | null;
+
+  endedAt?: string | null;
+
+  postponedFrom?: string | null;
+
+  postponeReason?: string | null;
+
 }
 
 
@@ -41,4 +51,9 @@ export interface CreateEventData {
 
   capacity?: number;
 
+}
+
+export interface PostponeEventData {
+  date: string;
+  reason?: string;
 }

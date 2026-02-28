@@ -1,0 +1,97 @@
+<div class="admin-users page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Admin / User Management</p>
+        <h1>Donor Users Control Panel</h1>
+        <p class="muted">Manage all donor profiles, monitor availability, and keep your registry clean.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/admin-dashboard" class="chip">Overview</a>
+        <a routerLink="/admin/users" class="chip chip-active">Users</a>
+        <a routerLink="/admin/hospitals" class="chip">Hospitals</a>
+        <a routerLink="/admin/requests" class="chip">Requests</a>
+      </div>
+    </section>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <section class="stats-grid">
+      <div class="card stat-card">
+        <p>Total Users</p>
+        <h3>{{ pagination.total }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Available Donors</p>
+        <h3>{{ availableUsersCount }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Unavailable Donors</p>
+        <h3>{{ unavailableUsersCount }}</h3>
+      </div>
+    </section>
+
+    <section class="card data-wrap">
+      <div class="table-head">
+        <h2>Users List</h2>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilter()"
+          placeholder="Search by name, email, blood group..."
+          class="search-box"
+        />
+      </div>
+
+      <div *ngIf="isLoading" class="loading loading-skeleton">
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line"></div>
+      </div>
+
+      <div class="table-responsive" *ngIf="!isLoading && filteredUsers.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Blood</th>
+              <th>Phone</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td><span class="blood-badge">{{ user.bloodGroup }}</span></td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.location }}</td>
+              <td>
+                <span [class]="user.isAvailable ? 'badge badge-success' : 'badge badge-warning'">
+                  {{ user.isAvailable ? 'Available' : 'Unavailable' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-delete" (click)="deleteUser(user._id!)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!isLoading && filteredUsers.length === 0" class="empty-state">
+        No users found for your current search.
+      </div>
+
+      <div class="pagination" *ngIf="!isLoading && pagination.totalPages > 1">
+        <button class="btn btn-secondary" (click)="changePage(pagination.page - 1)" [disabled]="pagination.page <= 1">Previous</button>
+        <span>Page {{ pagination.page }} of {{ pagination.totalPages }}</span>
+        <button class="btn btn-secondary" (click)="changePage(pagination.page + 1)" [disabled]="pagination.page >= pagination.totalPages">Next</button>
+      </div>
+    </section>
+  </div>
+</div>

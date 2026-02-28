@@ -1,0 +1,61 @@
+<div class="hospital-requests page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Hospital / Requests</p>
+        <h1>Hospital Request Tracker</h1>
+        <p class="muted">Monitor request status, donor assignment, and completion workflow.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/hospital/create-request" class="chip">Create Request</a>
+        <a routerLink="/hospital/requests" class="chip chip-active">Requests</a>
+        <a routerLink="/hospital/inventory" class="chip">Inventory</a>
+        <a routerLink="/hospital/profile" class="chip">Profile</a>
+      </div>
+    </section>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div *ngIf="isLoading" class="loading loading-skeleton">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <section class="grid grid-2" *ngIf="!isLoading">
+      <article class="card panel">
+        <h2>Active Requests ({{ activeRequests.length }})</h2>
+
+        <div class="request-item" *ngFor="let req of activeRequests">
+          <div>
+            <p><strong>{{ req.bloodGroup }}</strong> · {{ req.urgency || 'Medium' }}</p>
+            <p class="muted">{{ req.message }}</p>
+            <small>{{ req.createdAt | date:'short' }}</small>
+          </div>
+
+          <div class="actions">
+            <span class="badge" [ngClass]="req.status === 'accepted' ? 'badge-info' : req.status === 'rejected' ? 'badge-danger' : 'badge-warning'">{{ req.status }}</span>
+            <button class="btn btn-primary" *ngIf="req.status === 'accepted'" (click)="completeRequest(req._id!)">Mark Completed</button>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="activeRequests.length === 0">No active requests.</div>
+      </article>
+
+      <article class="card panel">
+        <h2>Completed Requests ({{ completedRequests.length }})</h2>
+
+        <div class="request-item done" *ngFor="let req of completedRequests">
+          <div>
+            <p><strong>{{ req.bloodGroup }}</strong> · Completed</p>
+            <small>{{ req.completedAt || req.updatedAt | date:'short' }}</small>
+          </div>
+          <span class="badge badge-success">Completed</span>
+        </div>
+
+        <div class="empty-state" *ngIf="completedRequests.length === 0">No completed requests yet.</div>
+      </article>
+    </section>
+  </div>
+</div>

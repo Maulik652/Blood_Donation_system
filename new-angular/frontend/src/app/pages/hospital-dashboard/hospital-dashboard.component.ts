@@ -19,9 +19,12 @@ export class HospitalDashboardComponent implements OnInit {
   profile: User | null = null;
 
   stats = {
+    totalDonors: 0,
     active: 0,
     critical: 0
   };
+
+  inventorySnapshot: { bloodGroup: string; units: number }[] = [];
 
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -78,11 +81,38 @@ export class HospitalDashboardComponent implements OnInit {
   }
 
   calculateStats(): void {
+    const donors = new Set(
+      this.requests
+        .filter((request) => !!request.donor?._id)
+        .map((request) => request.donor!._id)
+    );
+
+    this.stats.totalDonors = donors.size;
     this.stats.active = this.requests.filter(r => r.status !== 'completed').length;
 
     this.stats.critical = this.requests.filter(
       r => r.urgency === 'Critical' && r.status !== 'completed'
     ).length;
+
+    this.inventorySnapshot = this.getInventorySnapshot();
+  }
+
+  private getInventorySnapshot(): { bloodGroup: string; units: number }[] {
+    const inventoryMap = new Map<string, number>();
+
+    this.bloodGroups.forEach((group) => inventoryMap.set(group, 0));
+
+    this.requests.forEach((request) => {
+      if (request.status === 'completed') {
+        const current = inventoryMap.get(request.bloodGroup) || 0;
+        inventoryMap.set(request.bloodGroup, current + 1);
+      }
+    });
+
+    return this.bloodGroups.map((group) => ({
+      bloodGroup: group,
+      units: inventoryMap.get(group) || 0,
+    }));
   }
 
   createRequest(): void {

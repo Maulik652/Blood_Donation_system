@@ -1,0 +1,22 @@
+.donor-requests { padding-top: 24px; }
+.hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
+.hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
+.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.stats { padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.list { display: grid; gap: 12px; }
+.request-item { padding: 16px; display: flex; justify-content: space-between; gap: 14px; }
+.request-item h3 { font-size: 1.03rem; }
+.meta { color: var(--text-secondary); font-size: 0.8rem; }
+.meta-right { display: grid; justify-items: end; gap: 8px; min-width: 180px; }
+.actions { display: flex; gap: 8px; }
+.urgency-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 10px; border: 1px solid transparent; font-size: 0.74rem; font-weight: 600; }
+.urgency-chip.critical { background: var(--danger-bg); border-color: #fecaca; color: var(--danger-text); }
+.urgency-chip.high { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+.urgency-chip.medium { background: #ecfeff; border-color: #a5f3fc; color: #0e7490; }
+.urgency-chip.low { background: #f3f4f6; border-color: #e5e7eb; color: #4b5563; }
+.empty-state { text-align: center; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; color: var(--text-secondary); }
+@media (max-width: 840px) {
+  .request-item { flex-direction: column; }
+  .meta-right { justify-items: start; min-width: auto; }
+}

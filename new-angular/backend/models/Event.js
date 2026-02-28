@@ -58,6 +58,34 @@ type:String,
 default:"https://images.unsplash.com/photo-1615461066841-6116e61058f4",
 trim:true,
 maxlength:500
+},
+
+status: {
+type: String,
+enum: ['scheduled', 'live', 'postponed', 'ended'],
+default: 'scheduled'
+},
+
+startedAt: {
+type: Date,
+default: null
+},
+
+endedAt: {
+type: Date,
+default: null
+},
+
+postponedFrom: {
+type: Date,
+default: null
+},
+
+postponeReason: {
+type: String,
+trim: true,
+maxlength: 240,
+default: null
 }
 
 },

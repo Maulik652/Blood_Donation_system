@@ -5,6 +5,7 @@ const {
   getAllHospitals,
   getAllRequests,
   deleteUser,
+  approveHospital,
   getStatistics
 } = require('../controllers/adminController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
@@ -17,6 +18,7 @@ router.use(authorizeRoles('admin'));
 
 router.get('/users', getAllUsers);
 router.get('/hospitals', getAllHospitals);
+router.patch('/hospitals/:id/approve', approveHospital);
 router.get('/requests', getAllRequests);
 router.delete('/users/:id', deleteUser);
 router.get('/statistics', getStatistics);

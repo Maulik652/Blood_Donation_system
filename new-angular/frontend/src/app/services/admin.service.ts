@@ -41,6 +41,7 @@ interface AdminListRequestsResponse {
 interface AdminStatsResponse {
   success: boolean;
   statistics: {
+    totalUsers: number;
     totalDonors: number;
     totalHospitals: number;
     totalRequests: number;
@@ -70,6 +71,10 @@ export class AdminService {
 
   deleteUser(userId: string): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(`${this.apiUrl}/admin/users/${userId}`);
+  }
+
+  approveHospital(hospitalId: string): Observable<{ success: boolean; message: string }> {
+    return this.http.patch<{ success: boolean; message: string }>(`${this.apiUrl}/admin/hospitals/${hospitalId}/approve`, {});
   }
 
   getStatistics(): Observable<AdminStatsResponse> {

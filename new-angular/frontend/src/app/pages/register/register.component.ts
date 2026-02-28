@@ -20,7 +20,7 @@ export class RegisterComponent {
     age: [18, [Validators.required, Validators.min(18), Validators.max(65)]],
     bloodGroup: ['', [Validators.required]],
     location: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
-    role: ['user', [Validators.required]],
+    role: ['donor', [Validators.required]],
   });
 
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -55,7 +55,7 @@ export class RegisterComponent {
       email: this.f.email.value?.trim().toLowerCase() || '',
       password: this.f.password.value || '',
       age: Number(this.f.age.value),
-      role: (this.f.role.value || 'user') as 'user' | 'hospital',
+      role: ((this.f.role.value || 'user') === 'donor' ? 'user' : (this.f.role.value || 'user')) as 'user' | 'hospital',
       phone: this.f.phone.value?.trim() || '',
       bloodGroup: this.f.bloodGroup.value || '',
       location: this.f.location.value?.trim() || '',
@@ -67,7 +67,7 @@ export class RegisterComponent {
         this.successMessage = 'Registration successful! Redirecting...';
         
         setTimeout(() => {
-          const userRole = this.authService.getUserRole();
+          const userRole = this.authService.getRole();
           if (userRole === 'hospital') {
             this.router.navigate(['/hospital-dashboard']);
           } else {

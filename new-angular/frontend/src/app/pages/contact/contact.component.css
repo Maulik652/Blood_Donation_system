@@ -4,7 +4,7 @@
 
 .contact-hero {
   text-align: center;
-  padding: 70px 20px 42px;
+  padding: 64px 20px 34px;
 }
 
 .contact-hero h1 {
@@ -19,13 +19,13 @@
 }
 
 .contact-content {
-  padding: 18px 0 46px;
+  padding: 10px 0 40px;
 }
 
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  gap: 20px;
 }
 
 .contact-info h2,
@@ -42,9 +42,9 @@
 .info-item,
 .emergency-box,
 .card {
-  background: rgba(255, 255, 255, 0.88);
+  background: #fff;
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
 }
 
@@ -52,7 +52,7 @@
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  padding: 16px;
+  padding: 20px;
   margin-bottom: 12px;
 }
 
@@ -81,18 +81,19 @@
 
 .emergency-box h3 {
   color: var(--primary-600);
-  font-size: 1.06rem;
+  padding: 20px;
 }
 
 .emergency-number {
   margin: 8px 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary-600);
+  padding: 20px;
 }
 
 .card {
   padding: 24px;
+  margin-top: 105px;
 }
 
 @media (max-width: 900px) {

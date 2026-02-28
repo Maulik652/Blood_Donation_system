@@ -21,6 +21,7 @@ interface CsrfTokenResponse {
 export class AuthService {
   private apiUrl = environment.apiUrl;
   private readonly userKey = 'user';
+  private readonly tokenKey = 'token';
   private readonly csrfKey = 'csrfToken';
   private readonly profileCacheWindowMs = 60 * 1000;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -59,8 +60,11 @@ export class AuthService {
     }
   }
 
-  private setSession(user: User): void {
+  private setSession(user: User, token?: string): void {
     localStorage.setItem(this.userKey, JSON.stringify(user));
+    if (token) {
+      localStorage.setItem(this.tokenKey, token);
+    }
     this.currentUserSubject.next(user);
     this.lastProfileSyncAt = Date.now();
   }
@@ -76,6 +80,7 @@ export class AuthService {
 
   private clearSession(): void {
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.tokenKey);
     sessionStorage.removeItem(this.csrfKey);
     this.currentUserSubject.next(null);
     this.lastProfileSyncAt = 0;
@@ -83,14 +88,14 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return null;
+    return localStorage.getItem(this.tokenKey);
   }
 
   register(data: RegisterData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/users/register`, data).pipe(
       tap(response => {
         if (response?.user) {
-          this.setSession(response.user);
+          this.setSession(response.user, response.token);
           this.setCsrfToken(response.csrfToken);
         }
       })
@@ -101,7 +106,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/users/login`, credentials).pipe(
       tap(response => {
         if (response?.user) {
-          this.setSession(response.user);
+          this.setSession(response.user, response.token);
           this.setCsrfToken(response.csrfToken);
         }
       })
@@ -122,6 +127,28 @@ export class AuthService {
   getUserRole(): string | null {
     const user = this.getCurrentUser();
     return user?.role || null;
+  }
+
+  getRole(): 'guest' | 'donor' | 'hospital' | 'admin' {
+    const role = this.getUserRole();
+
+    if (!role) {
+      return 'guest';
+    }
+
+    if (role === 'user' || role === 'donor') {
+      return 'donor';
+    }
+
+    if (role === 'hospital') {
+      return 'hospital';
+    }
+
+    if (role === 'admin') {
+      return 'admin';
+    }
+
+    return 'guest';
   }
 
   getCurrentUser(): User | null {

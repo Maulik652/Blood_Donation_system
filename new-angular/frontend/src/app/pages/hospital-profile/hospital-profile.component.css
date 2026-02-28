@@ -1,0 +1,16 @@
+.hospital-profile { padding-top: 24px; }
+.hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
+.hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
+.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.profile-card, .stats-card { padding: 20px; }
+.profile-card h2, .stats-card h2 { font-size: 1.06rem; margin-bottom: 12px; }
+.profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+.metric-grid { display: grid; gap: 10px; }
+.metric { border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: flex; align-items: center; justify-content: space-between; }
+.metric span { color: var(--text-secondary); }
+.metric strong { color: var(--primary-600); font-size: 1.2rem; }
+@media (max-width: 860px) {
+  .grid.grid-2 { grid-template-columns: 1fr; }
+  .profile-grid { grid-template-columns: 1fr; }
+}

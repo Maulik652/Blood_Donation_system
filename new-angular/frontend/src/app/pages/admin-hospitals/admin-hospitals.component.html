@@ -1,0 +1,96 @@
+<div class="admin-hospitals page-shell">
+  <div class="container">
+    <section class="card hero">
+      <div>
+        <p class="zone-kicker">Admin / Hospital Governance</p>
+        <h1>Hospital Approvals & Compliance</h1>
+        <p class="muted">Review registrations, approve verified hospitals, and maintain trusted partners.</p>
+      </div>
+
+      <div class="quick-links">
+        <a routerLink="/admin-dashboard" class="chip">Overview</a>
+        <a routerLink="/admin/users" class="chip">Users</a>
+        <a routerLink="/admin/hospitals" class="chip chip-active">Hospitals</a>
+        <a routerLink="/admin/requests" class="chip">Requests</a>
+      </div>
+    </section>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <section class="stats-grid">
+      <div class="card stat-card">
+        <p>Total Hospitals</p>
+        <h3>{{ pagination.total }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Approved</p>
+        <h3>{{ approvedCount }}</h3>
+      </div>
+      <div class="card stat-card">
+        <p>Pending</p>
+        <h3>{{ pendingCount }}</h3>
+      </div>
+    </section>
+
+    <section class="card data-wrap">
+      <div class="table-head">
+        <h2>Hospital List</h2>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilter()"
+          placeholder="Search by hospital name, email, location..."
+          class="search-box"
+        />
+      </div>
+
+      <div *ngIf="isLoading" class="loading loading-skeleton">
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line"></div>
+      </div>
+
+      <div class="table-responsive" *ngIf="!isLoading && filteredHospitals.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Location</th>
+              <th>Approval</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hospital of filteredHospitals">
+              <td>{{ hospital.name }}</td>
+              <td>{{ hospital.email }}</td>
+              <td>{{ hospital.phone }}</td>
+              <td>{{ hospital.location }}</td>
+              <td>
+                <span class="badge" [ngClass]="hospital.hospitalApproved ? 'badge-success' : 'badge-warning'">
+                  {{ hospital.hospitalApproved ? 'Approved' : 'Pending Approval' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="btn btn-secondary" *ngIf="!hospital.hospitalApproved" (click)="approveHospital(hospital._id!)">Approve</button>
+                <button class="btn-delete" (click)="deleteHospital(hospital._id!)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!isLoading && filteredHospitals.length === 0" class="empty-state">
+        No hospitals found for your current search.
+      </div>
+
+      <div class="pagination" *ngIf="!isLoading && pagination.totalPages > 1">
+        <button class="btn btn-secondary" (click)="changePage(pagination.page - 1)" [disabled]="pagination.page <= 1">Previous</button>
+        <span>Page {{ pagination.page }} of {{ pagination.totalPages }}</span>
+        <button class="btn btn-secondary" (click)="changePage(pagination.page + 1)" [disabled]="pagination.page >= pagination.totalPages">Next</button>
+      </div>
+    </section>
+  </div>
+</div>

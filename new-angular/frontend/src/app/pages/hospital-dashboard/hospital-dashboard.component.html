@@ -45,6 +45,10 @@
 
     <div class="quick-stats">
       <div class="stat-box">
+        <strong>{{ stats.totalDonors }}</strong>
+        <span>Total Donors</span>
+      </div>
+      <div class="stat-box">
         <strong>{{ stats.active }}</strong>
         <span>Active Requests</span>
       </div>
@@ -59,6 +63,33 @@
       <div class="stat-box">
         <strong>{{ requests.length }}</strong>
         <span>Total Cases</span>
+      </div>
+    </div>
+
+    <div class="card inventory-card">
+      <h3>Blood Inventory</h3>
+      <div class="inventory-grid">
+        <div class="inventory-item" *ngFor="let stock of inventorySnapshot">
+          <span class="blood-badge">{{ stock.bloodGroup }}</span>
+          <strong>{{ stock.units }} Units</strong>
+        </div>
+      </div>
+
+      <div class="table-responsive inventory-table" *ngIf="inventorySnapshot.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Blood Group</th>
+              <th>Available Units</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock of inventorySnapshot">
+              <td><span class="blood-badge">{{ stock.bloodGroup }}</span></td>
+              <td>{{ stock.units }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -147,6 +178,30 @@
             Complete
           </button>
         </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Recent Requests Table</h3>
+      <div class="table-responsive" *ngIf="requests.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Blood Group</th>
+              <th>Urgency</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of requests.slice(0, 6)">
+              <td><span class="blood-badge">{{ request.bloodGroup }}</span></td>
+              <td><span class="urgency" [class]="request.urgency?.toLowerCase()">{{ request.urgency || 'Medium' }}</span></td>
+              <td><span class="status-chip" [ngClass]="getStatusClass(request.status)">{{ request.status }}</span></td>
+              <td>{{ request.createdAt | date:'mediumDate' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>

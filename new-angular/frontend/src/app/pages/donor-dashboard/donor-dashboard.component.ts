@@ -18,11 +18,13 @@ export class DonorDashboardComponent implements OnInit {
   user: User | null = null;
   availableRequests: Request[] = [];
   donationHistory: Request[] = [];
+  monthlyDonations: { label: string; count: number; height: number }[] = [];
 
   stats = {
     totalDonations: 0,
+    completedRequests: 0,
     livesSaved: 0,
-    responseRate: 92
+    eligibilityDaysLeft: 0,
   };
 
   errorMessage = '';
@@ -49,9 +51,12 @@ export class DonorDashboardComponent implements OnInit {
       next: ({ profile, available, history }) => {
         this.user = profile.user;
         this.stats.totalDonations = profile.user.totalDonations || 0;
+        this.stats.completedRequests = (history.requests || []).filter((item) => item.status === 'completed').length;
         this.stats.livesSaved = (profile.user.totalDonations || 0) * 3;
+        this.stats.eligibilityDaysLeft = this.getRemainingDays();
         this.availableRequests = available.requests || [];
         this.donationHistory = history.requests || [];
+        this.monthlyDonations = this.buildMonthlyDonations(this.donationHistory);
         this.isLoading = false;
       },
       error: (error) => {
@@ -115,5 +120,58 @@ export class DonorDashboardComponent implements OnInit {
     );
 
     return Math.max(90 - diffDays, 0);
+  }
+
+  getLastDonationDate(): string {
+    if (!this.user?.lastDonationDate) {
+      return 'No donations yet';
+    }
+
+    return new Date(this.user.lastDonationDate).toLocaleDateString();
+  }
+
+  getEligibilityProgress(): number {
+    if (!this.user?.lastDonationDate) {
+      return 100;
+    }
+
+    const elapsedDays = 90 - this.getRemainingDays();
+    return Math.max(0, Math.min(100, Math.round((elapsedDays / 90) * 100)));
+  }
+
+  private buildMonthlyDonations(history: Request[]): { label: string; count: number; height: number }[] {
+    const months: { label: string; count: number; height: number }[] = [];
+    const now = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+      const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        label: month.toLocaleDateString(undefined, { month: 'short' }),
+        count: 0,
+        height: 16,
+      });
+    }
+
+    history.forEach((item) => {
+      const rawDate = item.completedAt || item.updatedAt || item.createdAt;
+      if (!rawDate) {
+        return;
+      }
+
+      const date = new Date(rawDate);
+      const label = date.toLocaleDateString(undefined, { month: 'short' });
+      const monthEntry = months.find((month) => month.label === label);
+
+      if (monthEntry && item.status === 'completed') {
+        monthEntry.count += 1;
+      }
+    });
+
+    const max = Math.max(...months.map((month) => month.count), 1);
+
+    return months.map((month) => ({
+      ...month,
+      height: Math.max(16, Math.round((month.count / max) * 130)),
+    }));
   }
 }

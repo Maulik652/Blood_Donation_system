@@ -64,6 +64,13 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: transform var(--transition-medium), border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.identity-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.14);
+  box-shadow: var(--shadow-sm);
 }
 
 .identity-label {
@@ -107,6 +114,7 @@
 .stats-grid {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   margin: 10px 0 0;
+  gap: 20px;
 }
 
 .stat {
@@ -132,11 +140,42 @@
 }
 
 .stat.motivational {
-  text-align: left;
+  text-align: center;
 }
 
 .stat.motivational h3 {
-  font-size: 1.2rem;
+  font-size: 2rem;
+}
+
+.progress-card {
+  margin-top: 16px;
+}
+
+.progress-wrap {
+  margin-top: 12px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ef5350 0%, #E53935 100%);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.progress-meta {
+  margin-top: 7px;
+  display: inline-block;
+  color: var(--text-secondary);
+  font-size: 0.83rem;
 }
 
 .availability {
@@ -162,7 +201,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: border-color var(--transition-medium), transform var(--transition-medium), box-shadow var(--transition-medium);
 }
 
 .request.critical-focus {
@@ -236,7 +275,7 @@
 .accept:hover,
 .availability button:hover {
   background: var(--primary-600);
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.01);
 }
 
 .reject {
@@ -247,6 +286,7 @@
 
 .reject:hover {
   background: var(--bg-soft);
+  transform: translateY(-1px);
 }
 
 .profile-grid {
@@ -303,6 +343,43 @@
   margin-top: 14px;
 }
 
+.chart-card {
+  margin-bottom: 14px;
+}
+
+.chart {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+  min-height: 170px;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar {
+  width: 30px;
+  border-radius: 12px 12px 6px 6px;
+  background: linear-gradient(180deg, #ef5350 0%, #E53935 100%);
+}
+
+.bar-group .value {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.bar-group .label {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
 @media (max-width: 768px) {
   .dashboard {
     padding: 30px 14px;
@@ -324,6 +401,11 @@
 
   .actions {
     width: 100%;
+  }
+
+  .chart {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
   }
 
   .actions button {

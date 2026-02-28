@@ -9,10 +9,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const isMutation = !['GET', 'HEAD', 'OPTIONS'].includes(req.method.toUpperCase());
   const csrfToken = authService.getCsrfToken();
+  const token = authService.getToken();
+
+  const headers: Record<string, string> = {};
+
+  if (isMutation && csrfToken) {
+    headers['x-csrf-token'] = csrfToken;
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
   const request = req.clone({
     withCredentials: true,
-    setHeaders: isMutation && csrfToken ? { 'x-csrf-token': csrfToken } : {}
+    setHeaders: headers
   });
   const isAuthEndpoint = /\/users\/(login|register|logout)$/.test(req.url);
   const isLoginRoute = router.url.startsWith('/login');

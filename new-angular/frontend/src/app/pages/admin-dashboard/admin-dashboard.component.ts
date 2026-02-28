@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
 import { EventService } from '../../services/event.service';
@@ -19,7 +20,7 @@ interface PaginationState {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -27,6 +28,7 @@ export class AdminDashboardComponent implements OnInit {
   activeTab: 'overview' | 'donors' | 'hospitals' | 'requests' | 'events' = 'overview';
   
   statistics = {
+    totalUsers: 0,
     totalDonors: 0,
     totalHospitals: 0,
     totalRequests: 0,
@@ -38,6 +40,9 @@ export class AdminDashboardComponent implements OnInit {
   requests: Request[] = [];
   events: Event[] = [];
   currentAdmin: User | null = null;
+  userGrowthSeries: { label: string; value: number; height: number }[] = [];
+  requestBloodGroupSeries: { bloodGroup: string; count: number; width: number }[] = [];
+  recentActivity: Request[] = [];
 
   showEventForm = false;
   editingEvent: Event | null = null;
@@ -106,6 +111,7 @@ export class AdminDashboardComponent implements OnInit {
         this.donorsPagination = donors.pagination || this.donorsPagination;
         this.hospitalsPagination = hospitals.pagination || this.hospitalsPagination;
         this.requestsPagination = requests.pagination || this.requestsPagination;
+        this.refreshOverviewMetrics();
         this.isLoading = false;
       },
       error: (error) => {
@@ -146,6 +152,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (response) => {
         this.requests = response.requests || [];
         this.requestsPagination = response.pagination || this.requestsPagination;
+        this.refreshOverviewMetrics();
       },
       error: (error) => {
         this.errorMessage = error.error?.message || 'Failed to load requests.';
@@ -180,6 +187,20 @@ export class AdminDashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  approveHospital(hospitalId: string): void {
+    this.adminService.approveHospital(hospitalId).subscribe({
+      next: () => {
+        this.successMessage = 'Hospital approved successfully';
+        this.loadHospitals();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'Failed to approve hospital.';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
   }
 
   toggleEventForm(): void {
@@ -308,6 +329,103 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  startEvent(event: Event): void {
+    if (!event._id) {
+      return;
+    }
+
+    this.eventService.startEvent(event._id).subscribe({
+      next: () => {
+        this.successMessage = 'Event started successfully';
+        this.loadEvents();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'Failed to start event';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
+  }
+
+  endEvent(event: Event): void {
+    if (!event._id) {
+      return;
+    }
+
+    this.eventService.endEvent(event._id).subscribe({
+      next: () => {
+        this.successMessage = 'Event ended successfully';
+        this.loadEvents();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'Failed to end event';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
+  }
+
+  postponeEvent(event: Event): void {
+    if (!event._id) {
+      return;
+    }
+
+    const nextDate = prompt('Enter new event date/time (YYYY-MM-DDTHH:mm)', this.toDatetimeLocal(event.date));
+    if (!nextDate) {
+      return;
+    }
+
+    const reason = prompt('Reason for postponement (optional)', event.postponeReason || '');
+
+    this.eventService.postponeEvent(event._id, { date: nextDate, reason: reason || undefined }).subscribe({
+      next: () => {
+        this.successMessage = 'Event postponed successfully';
+        this.loadEvents();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || 'Failed to postpone event';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
+  }
+
+  getEventStatusClass(status?: string): string {
+    switch ((status || 'scheduled').toLowerCase()) {
+      case 'live': return 'badge-danger';
+      case 'ended': return 'badge-info';
+      case 'postponed': return 'badge-warning';
+      default: return 'badge-success';
+    }
+  }
+
+  canStartEvent(event: Event): boolean {
+    return (event.status || 'scheduled') !== 'live' && (event.status || 'scheduled') !== 'ended';
+  }
+
+  canEndEvent(event: Event): boolean {
+    return (event.status || 'scheduled') === 'live';
+  }
+
+  canPostponeEvent(event: Event): boolean {
+    return (event.status || 'scheduled') === 'scheduled' || (event.status || 'scheduled') === 'postponed';
+  }
+
+  private toDatetimeLocal(input: string): string {
+    const parsed = new Date(input);
+    if (Number.isNaN(parsed.getTime())) {
+      return '';
+    }
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const yyyy = parsed.getFullYear();
+    const mm = pad(parsed.getMonth() + 1);
+    const dd = pad(parsed.getDate());
+    const hh = pad(parsed.getHours());
+    const min = pad(parsed.getMinutes());
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+  }
+
   setActiveTab(tab: 'overview' | 'donors' | 'hospitals' | 'requests' | 'events'): void {
     this.activeTab = tab;
 
@@ -366,5 +484,50 @@ export class AdminDashboardComponent implements OnInit {
     if (this.criticalRequestsCount > 0) return 'High Alert';
     if (this.pendingRequestsCount > 0) return 'Needs Attention';
     return 'Stable';
+  }
+
+  private refreshOverviewMetrics(): void {
+    this.recentActivity = [...this.requests]
+      .sort((a, b) => new Date(b.updatedAt || b.createdAt || '').getTime() - new Date(a.updatedAt || a.createdAt || '').getTime())
+      .slice(0, 6);
+
+    this.requestBloodGroupSeries = this.buildRequestBloodGroupSeries(this.requests);
+    this.userGrowthSeries = this.buildUserGrowthSeries();
+  }
+
+  private buildRequestBloodGroupSeries(requests: Request[]): { bloodGroup: string; count: number; width: number }[] {
+    const groups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    const map = new Map<string, number>();
+
+    groups.forEach((group) => map.set(group, 0));
+
+    requests.forEach((request) => {
+      map.set(request.bloodGroup, (map.get(request.bloodGroup) || 0) + 1);
+    });
+
+    const max = Math.max(...groups.map((group) => map.get(group) || 0), 1);
+
+    return groups
+      .map((group) => ({
+        bloodGroup: group,
+        count: map.get(group) || 0,
+        width: Math.max(8, Math.round(((map.get(group) || 0) / max) * 100)),
+      }))
+      .filter((item) => item.count > 0);
+  }
+
+  private buildUserGrowthSeries(): { label: string; value: number; height: number }[] {
+    const donorsCount = Math.max(this.statistics.totalDonors, 1);
+    const hospitalsCount = Math.max(this.statistics.totalHospitals, 1);
+    const totalUsersCount = Math.max(this.statistics.totalUsers, 1);
+
+    const series = [
+      { label: 'Donors', value: donorsCount, height: 0 },
+      { label: 'Hospitals', value: hospitalsCount, height: 0 },
+      { label: 'Users', value: totalUsersCount, height: 0 },
+    ];
+
+    const max = Math.max(...series.map((item) => item.value), 1);
+    return series.map((item) => ({ ...item, height: Math.max(18, Math.round((item.value / max) * 120)) }));
   }
 }

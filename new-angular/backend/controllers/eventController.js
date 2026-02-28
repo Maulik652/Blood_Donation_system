@@ -234,6 +234,146 @@ message:"Event Deleted"
 
 
 
+// START EVENT
+
+const startEvent = asyncHandler(async (req, res) => {
+
+if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+res.status(400);
+throw new Error('Invalid event id');
+}
+
+const event = await Event.findById(req.params.id);
+
+if (!event) {
+res.status(404);
+throw new Error('Event Not Found');
+}
+
+if (event.status === 'live') {
+res.status(400);
+throw new Error('Event is already live');
+}
+
+if (event.status === 'ended') {
+res.status(400);
+throw new Error('Ended events cannot be started again');
+}
+
+event.status = 'live';
+event.startedAt = new Date();
+event.endedAt = null;
+
+await event.save();
+
+res.json({
+success: true,
+message: 'Event started successfully',
+event,
+});
+
+});
+
+
+
+// END EVENT
+
+const endEvent = asyncHandler(async (req, res) => {
+
+if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+res.status(400);
+throw new Error('Invalid event id');
+}
+
+const event = await Event.findById(req.params.id);
+
+if (!event) {
+res.status(404);
+throw new Error('Event Not Found');
+}
+
+if (event.status === 'ended') {
+res.status(400);
+throw new Error('Event is already ended');
+}
+
+if (event.status !== 'live') {
+res.status(400);
+throw new Error('Only live events can be ended');
+}
+
+event.status = 'ended';
+event.endedAt = new Date();
+
+await event.save();
+
+res.json({
+success: true,
+message: 'Event ended successfully',
+event,
+});
+
+});
+
+
+
+// POSTPONE EVENT
+
+const postponeEvent = asyncHandler(async (req, res) => {
+
+if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+res.status(400);
+throw new Error('Invalid event id');
+}
+
+const event = await Event.findById(req.params.id);
+
+if (!event) {
+res.status(404);
+throw new Error('Event Not Found');
+}
+
+if (event.status === 'ended') {
+res.status(400);
+throw new Error('Ended events cannot be postponed');
+}
+
+if (event.status === 'live') {
+res.status(400);
+throw new Error('Live events cannot be postponed. End event first.');
+}
+
+const nextDate = req.body.date ? new Date(req.body.date) : null;
+
+if (!nextDate || Number.isNaN(nextDate.getTime())) {
+res.status(400);
+throw new Error('A valid future date is required to postpone event');
+}
+
+if (!validateFutureDate(nextDate)) {
+res.status(400);
+throw new Error('Postponed date must be in the future');
+}
+
+const reason = sanitizeText(req.body.reason, { maxLength: 240 });
+
+event.postponedFrom = event.date;
+event.date = nextDate;
+event.status = 'postponed';
+event.postponeReason = reason || null;
+
+await event.save();
+
+res.json({
+success: true,
+message: 'Event postponed successfully',
+event,
+});
+
+});
+
+
+
 
 // REGISTER EVENT (REAL SYSTEM)
 
@@ -247,6 +387,7 @@ throw new Error('Invalid event id');
 const event = await Event.findOneAndUpdate(
 {
 _id: req.params.id,
+$or: [{ status: 'scheduled' }, { status: 'postponed' }],
 $expr: { $lt: ['$registeredCount', '$capacity'] },
 registeredUsers: { $ne: req.user._id }
 },
@@ -276,6 +417,11 @@ res.status(400);
 throw new Error('Event Full');
 }
 
+if (existingEvent.status === 'ended') {
+res.status(400);
+throw new Error('Registration closed for ended events');
+}
+
 res.status(409);
 throw new Error('Unable to register for event at this time');
 
@@ -298,6 +444,9 @@ getAllEvents,
 createEvent,
 updateEvent,
 deleteEvent,
+startEvent,
+endEvent,
+postponeEvent,
 registerForEvent
 
 };
