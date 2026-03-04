@@ -1,13 +1,13 @@
-<div class="donor-history page-shell">
+<div class="donor-history page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Donor / History</p>
         <h1>Your Donation Journey</h1>
         <p class="muted">Track completed donations and contribution impact over time.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/donor/donate" class="chip">Donate</a>
         <a routerLink="/donor/requests" class="chip">Requests</a>
         <a routerLink="/donor/history" class="chip chip-active">History</a>
@@ -15,7 +15,7 @@
       </div>
     </section>
 
-    <section class="stats-grid">
+    <section class="stats-grid auth-metrics">
       <div class="card stat-card">
         <p>Total Records</p>
         <h3>{{ history.length }}</h3>
@@ -37,7 +37,7 @@
       <div class="skeleton-line"></div>
     </div>
 
-    <section class="card data-wrap" *ngIf="!isLoading && history.length > 0">
+    <section class="card data-wrap auth-surface" *ngIf="!isLoading && history.length > 0">
       <h2>Donation History</h2>
       <div class="table-responsive">
         <table class="data-table">

@@ -1,41 +1,35 @@
 .admin-reports {
-  padding-top: 24px;
+  padding-top: 30px;
 }
 
 .hero {
-  padding: 24px;
   margin-bottom: 12px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .hero h1 {
-  font-size: clamp(1.52rem, 2.4vw, 2rem);
+  font-size: clamp(1.62rem, 2.45vw, 2.2rem);
   letter-spacing: -0.01em;
 }
 
 .hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
 }
 
 .meta-line {
   color: var(--text-secondary);
-  font-size: 0.82rem;
-  margin-bottom: 12px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  font-size: 0.84rem;
   margin-bottom: 14px;
 }
 
+.stats-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .stat-card {
-  padding: 18px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -46,8 +40,7 @@
 
 .stat-card h3 {
   margin-top: 6px;
-  color: var(--primary-600);
-  font-size: 1.72rem;
+  font-size: 1.85rem;
   line-height: 1.1;
 }
 
@@ -56,7 +49,7 @@
 }
 
 .panel {
-  padding: 18px;
+  padding: 20px;
 }
 
 .panel h2 {
@@ -153,6 +146,26 @@
 @media (max-width: 620px) {
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-reports {
+    padding-top: 18px;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .stat-card {
+    padding: 16px 12px;
+  }
+
+  .stat-card h3 {
+    font-size: 1.5rem;
   }
 
   .status-row {

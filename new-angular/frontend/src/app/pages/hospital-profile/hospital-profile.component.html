@@ -1,13 +1,13 @@
-<div class="hospital-profile page-shell">
+<div class="hospital-profile page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Hospital / Profile</p>
         <h1>Hospital Profile Center</h1>
         <p class="muted">View organization details and operational request insights.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/hospital/create-request" class="chip">Create Request</a>
         <a routerLink="/hospital/requests" class="chip">Requests</a>
         <a routerLink="/hospital/inventory" class="chip">Inventory</a>
@@ -23,7 +23,7 @@
     </div>
 
     <section class="grid grid-2" *ngIf="!isLoading && profile">
-      <article class="card profile-card">
+      <article class="card profile-card auth-surface">
         <h2>Hospital Details</h2>
         <div class="profile-grid">
           <p><strong>Name:</strong> {{ profile.name }}</p>
@@ -39,7 +39,7 @@
         </div>
       </article>
 
-      <article class="card stats-card">
+      <article class="card stats-card auth-surface">
         <h2>Operational Snapshot</h2>
         <div class="metric-grid">
           <div class="metric">

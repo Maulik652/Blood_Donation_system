@@ -1,13 +1,13 @@
-<div class="hospital-create page-shell">
+<div class="hospital-create page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Hospital / Create Request</p>
         <h1>Create Blood Request</h1>
         <p class="muted">Post urgent blood requirements and notify matching donors instantly.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/hospital/create-request" class="chip chip-active">Create Request</a>
         <a routerLink="/hospital/requests" class="chip">Requests</a>
         <a routerLink="/hospital/inventory" class="chip">Inventory</a>
@@ -18,7 +18,7 @@
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
 
-    <section class="card form-wrap">
+    <section class="card form-wrap auth-surface">
       <h2>Request Details</h2>
 
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate>

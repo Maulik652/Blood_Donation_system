@@ -1,8 +1,8 @@
-.donor-requests { padding-top: 24px; }
+.donor-requests { padding-top: 8px; }
 .hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
 .hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
-.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip-active { font-weight: 700; }
 .stats { padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .list { display: grid; gap: 12px; }
 .request-item { padding: 16px; display: flex; justify-content: space-between; gap: 14px; }
@@ -19,4 +19,11 @@
 @media (max-width: 840px) {
   .request-item { flex-direction: column; }
   .meta-right { justify-items: start; min-width: auto; }
+}
+
+@media (max-width: 640px) {
+  .donor-requests { padding-top: 0; }
+  .hero h1 { font-size: 1.35rem; }
+  .stats { padding: 12px; }
+  .request-item { padding: 12px; }
 }

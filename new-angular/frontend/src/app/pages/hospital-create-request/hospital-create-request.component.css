@@ -1,10 +1,16 @@
-.hospital-create { padding-top: 24px; }
+.hospital-create { padding-top: 8px; }
 .hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
 .hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
-.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip-active { font-weight: 700; }
 .form-wrap { padding: 22px; }
 .form-wrap h2 { font-size: 1.06rem; margin-bottom: 12px; }
 @media (max-width: 860px) {
   .grid.grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .hospital-create { padding-top: 0; }
+  .hero h1 { font-size: 1.35rem; }
+  .form-wrap { padding: 14px; }
 }

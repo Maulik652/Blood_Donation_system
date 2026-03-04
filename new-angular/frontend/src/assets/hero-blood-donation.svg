@@ -1,0 +1,55 @@
+<svg width="900" height="700" viewBox="0 0 900 700" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Blood donation hero illustration</title>
+  <desc id="desc">Illustration of blood bag, heart pulse, donor and medical symbols for a blood donation platform.</desc>
+  <defs>
+    <linearGradient id="bgGrad" x1="96" y1="60" x2="770" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF1F2"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="250" y1="170" x2="640" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <linearGradient id="bloodGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EF4444"/>
+      <stop offset="1" stop-color="#C62828"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="900" height="700" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#991B1B" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect x="70" y="55" width="760" height="590" rx="36" fill="url(#bgGrad)"/>
+
+  <circle cx="180" cy="150" r="48" fill="#FEE2E2"/>
+  <path d="M180 116C170 98 142 106 142 128C142 160 180 181 180 181C180 181 218 160 218 128C218 106 190 98 180 116Z" fill="#EF4444"/>
+
+  <g filter="url(#shadow)">
+    <rect x="230" y="145" width="440" height="410" rx="28" fill="url(#cardGrad)" stroke="#F1F5F9"/>
+  </g>
+
+  <rect x="360" y="185" width="180" height="300" rx="18" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="376" y="220" width="148" height="220" rx="12" fill="#FEE2E2"/>
+  <path d="M450 255C438 233 406 242 406 268C406 307 450 332 450 332C450 332 494 307 494 268C494 242 462 233 450 255Z" fill="url(#bloodGrad)"/>
+  <rect x="420" y="198" width="60" height="12" rx="6" fill="#D1D5DB"/>
+
+  <path d="M540 230C602 230 640 270 640 330" stroke="#DC2626" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="640" cy="330" r="14" fill="#DC2626"/>
+  <path d="M644 344C644 344 668 370 668 402C668 422 653 438 634 438C615 438 600 422 600 402C600 370 624 344 624 344" fill="#EF4444"/>
+
+  <rect x="118" y="358" width="170" height="154" rx="20" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <circle cx="203" cy="406" r="34" fill="#FEE2E2"/>
+  <path d="M203 387C195 373 173 379 173 396C173 420 203 439 203 439C203 439 233 420 233 396C233 379 211 373 203 387Z" fill="#EF4444"/>
+  <rect x="150" y="457" width="106" height="10" rx="5" fill="#E5E7EB"/>
+  <rect x="165" y="475" width="76" height="10" rx="5" fill="#F1F5F9"/>
+
+  <rect x="640" y="124" width="130" height="110" rx="18" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <path d="M692 152V208" stroke="#DC2626" stroke-width="10" stroke-linecap="round"/>
+  <path d="M664 180H720" stroke="#DC2626" stroke-width="10" stroke-linecap="round"/>
+
+  <rect x="635" y="470" width="146" height="120" rx="18" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <path d="M666 530H750" stroke="#E5E7EB" stroke-width="10" stroke-linecap="round"/>
+  <path d="M666 552H728" stroke="#F1F5F9" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="689" cy="503" r="16" fill="#FEE2E2"/>
+  <path d="M689 494C685 488 676 490 676 497C676 507 689 515 689 515C689 515 702 507 702 497C702 490 693 488 689 494Z" fill="#EF4444"/>
+</svg>

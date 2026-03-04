@@ -1,23 +1,20 @@
 .admin-users {
-  padding-top: 24px;
+  padding-top: 30px;
 }
 
 .hero {
-  padding: 24px;
   margin-bottom: 18px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .hero h1 {
-  font-size: clamp(1.5rem, 2.3vw, 2rem);
+  font-size: clamp(1.62rem, 2.45vw, 2.2rem);
   letter-spacing: -0.01em;
 }
 
 .quick-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .chip {
@@ -25,53 +22,47 @@
 }
 
 .chip-active {
-  background: var(--primary-500);
-  color: #fff;
-  border-color: transparent;
+  font-weight: 700;
 }
 
 .stats-grid {
-  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 18px;
 }
 
 .stat-card {
-  padding: 18px;
+  padding: 20px;
   text-align: center;
 }
 
 .stat-card p {
   color: var(--text-secondary);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
 }
 
 .stat-card h3 {
   margin-top: 6px;
-  color: var(--primary-600);
-  font-size: 1.7rem;
+  font-size: 1.85rem;
   line-height: 1.1;
 }
 
 .data-wrap {
-  padding: 20px;
+  padding: 22px;
 }
 
 .table-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 14px;
+  margin-bottom: 16px;
 }
 
 .table-head h2 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .search-box {
-  max-width: 300px;
+  max-width: 340px;
 }
 
 .btn-delete {
@@ -93,7 +84,7 @@
 }
 
 .pagination {
-  margin-top: 14px;
+  margin-top: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,5 +112,31 @@
 
   .search-box {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-users {
+    padding-top: 18px;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .data-wrap {
+    padding: 14px;
+  }
+
+  .table-head h2 {
+    font-size: 1rem;
+  }
+
+  .stat-card {
+    padding: 16px 12px;
+  }
+
+  .stat-card h3 {
+    font-size: 1.5rem;
   }
 }

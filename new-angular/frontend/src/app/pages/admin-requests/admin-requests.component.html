@@ -1,13 +1,13 @@
-<div class="admin-requests page-shell">
+<div class="admin-requests page-shell admin-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero admin-hero">
       <div>
         <p class="zone-kicker">Admin / Request Operations</p>
         <h1>Blood Request Intelligence Desk</h1>
         <p class="muted">Track urgency, status flow, and donor assignment in one responsive command view.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links admin-links">
         <a routerLink="/admin-dashboard" class="chip">Overview</a>
         <a routerLink="/admin/users" class="chip">Users</a>
         <a routerLink="/admin/hospitals" class="chip">Hospitals</a>
@@ -17,7 +17,7 @@
 
     <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
 
-    <section class="stats-grid">
+    <section class="stats-grid admin-metrics">
       <div class="card stat-card">
         <p>Total Requests</p>
         <h3>{{ pagination.total }}</h3>
@@ -36,7 +36,7 @@
       </div>
     </section>
 
-    <section class="card data-wrap">
+    <section class="card data-wrap admin-surface">
       <div class="table-head">
         <h2>Request List</h2>
         <div class="filters">

@@ -1,8 +1,8 @@
-.hospital-inventory { padding-top: 24px; }
+.hospital-inventory { padding-top: 8px; }
 .hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
 .hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
-.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip-active { font-weight: 700; }
 .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .stat-card { padding: 16px; text-align: center; }
 .stat-card p { color: var(--text-secondary); font-size: 0.84rem; }
@@ -12,4 +12,12 @@
 .table-wrap h2 { font-size: 1.04rem; margin-bottom: 12px; }
 @media (max-width: 860px) {
   .stats-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .hospital-inventory { padding-top: 0; }
+  .hero h1 { font-size: 1.35rem; }
+  .stat-card { padding: 14px; }
+  .stat-card h3 { font-size: 1.45rem; }
+  .table-wrap { padding: 14px; }
 }

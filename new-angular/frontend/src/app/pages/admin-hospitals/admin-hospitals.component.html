@@ -1,13 +1,13 @@
-<div class="admin-hospitals page-shell">
+<div class="admin-hospitals page-shell admin-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero admin-hero">
       <div>
         <p class="zone-kicker">Admin / Hospital Governance</p>
         <h1>Hospital Approvals & Compliance</h1>
         <p class="muted">Review registrations, approve verified hospitals, and maintain trusted partners.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links admin-links">
         <a routerLink="/admin-dashboard" class="chip">Overview</a>
         <a routerLink="/admin/users" class="chip">Users</a>
         <a routerLink="/admin/hospitals" class="chip chip-active">Hospitals</a>
@@ -18,7 +18,7 @@
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
 
-    <section class="stats-grid">
+    <section class="stats-grid admin-metrics">
       <div class="card stat-card">
         <p>Total Hospitals</p>
         <h3>{{ pagination.total }}</h3>
@@ -33,7 +33,7 @@
       </div>
     </section>
 
-    <section class="card data-wrap">
+    <section class="card data-wrap admin-surface">
       <div class="table-head">
         <h2>Hospital List</h2>
         <input

@@ -1,13 +1,13 @@
-<div class="donor-profile page-shell">
+<div class="donor-profile page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Donor / Profile</p>
         <h1>Donor Identity & Availability</h1>
         <p class="muted">Manage your donor profile visibility and donation readiness status.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/donor/donate" class="chip">Donate</a>
         <a routerLink="/donor/requests" class="chip">Requests</a>
         <a routerLink="/donor/history" class="chip">History</a>
@@ -24,7 +24,7 @@
     </div>
 
     <section class="grid grid-2" *ngIf="!isLoading && user">
-      <article class="card profile-card">
+      <article class="card profile-card auth-surface">
         <h2>Personal Details</h2>
         <div class="profile-grid">
           <p><strong>Name:</strong> {{ user.name }}</p>
@@ -36,7 +36,7 @@
         </div>
       </article>
 
-      <article class="card status-card">
+      <article class="card status-card auth-surface">
         <h2>Donation Status</h2>
         <p><strong>Availability:</strong>
           <span class="badge" [ngClass]="user.isAvailable ? 'badge-success' : 'badge-warning'">

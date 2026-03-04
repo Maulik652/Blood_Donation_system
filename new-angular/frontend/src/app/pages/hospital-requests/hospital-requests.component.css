@@ -1,8 +1,8 @@
-.hospital-requests { padding-top: 24px; }
+.hospital-requests { padding-top: 8px; }
 .hero { padding: 24px; margin-bottom: 16px; display: grid; gap: 12px; }
 .hero h1 { font-size: clamp(1.45rem, 2.3vw, 2rem); }
-.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip-active { background: var(--primary-500); color: #fff; border-color: transparent; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip-active { font-weight: 700; }
 .panel { padding: 18px; }
 .panel h2 { font-size: 1.02rem; margin-bottom: 12px; }
 .request-item { border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
@@ -13,4 +13,11 @@
   .grid.grid-2 { grid-template-columns: 1fr; }
   .request-item { flex-direction: column; }
   .actions { justify-items: start; }
+}
+
+@media (max-width: 640px) {
+  .hospital-requests { padding-top: 0; }
+  .hero h1 { font-size: 1.35rem; }
+  .panel { padding: 14px; }
+  .request-item { padding: 10px; }
 }

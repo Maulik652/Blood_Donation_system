@@ -105,8 +105,15 @@
 }
 
 .register-btn:hover {
-  background: #c62828;
+  background: #fff;
+  color:#DC2626  !important;
   transform: translateY(-1px);
+}
+
+.register-btn::after,
+.login-btn::after,
+.logout::after {
+  display: none;
 }
 
 .user-area {

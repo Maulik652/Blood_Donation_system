@@ -2,6 +2,10 @@
   padding: 42px 20px;
   max-width: 1240px;
   margin: 0 auto;
+  background:
+    radial-gradient(circle at 10% 4%, rgba(239, 68, 68, 0.07) 0%, rgba(239, 68, 68, 0) 24%),
+    radial-gradient(circle at 92% 8%, rgba(220, 38, 38, 0.06) 0%, rgba(220, 38, 38, 0) 22%),
+    var(--bg-soft);
 }
 
 .zone {
@@ -42,7 +46,10 @@
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 20px;
-  background: rgba(255, 255, 255, 0.86);
+  background: linear-gradient(115deg, #fff5f6 0%, #ffffff 52%, #fff 100%);
+  border: 1px solid #f1d2d4;
+  border-radius: 18px;
+  box-shadow: 0 14px 28px rgba(17, 24, 39, 0.08);
 }
 
 .hero h2 {
@@ -124,7 +131,10 @@
 .stat h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-600);
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1.1;
 }
 
@@ -382,7 +392,7 @@
 
 @media (max-width: 768px) {
   .dashboard {
-    padding: 30px 14px;
+    padding: 24px 12px;
   }
 
   .availability,
@@ -410,5 +420,23 @@
 
   .actions button {
     flex: 1;
+  }
+
+  .card,
+  .zone {
+    padding: 14px;
+  }
+
+  .hero h2 {
+    font-size: 1.3rem;
+  }
+
+  .stat h3,
+  .stat.motivational h3 {
+    font-size: 1.55rem;
+  }
+
+  .request {
+    padding: 12px;
   }
 }

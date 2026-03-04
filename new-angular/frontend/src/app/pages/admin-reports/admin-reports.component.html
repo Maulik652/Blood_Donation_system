@@ -1,13 +1,13 @@
-<div class="admin-reports page-shell">
+<div class="admin-reports page-shell admin-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero admin-hero">
       <div>
         <p class="zone-kicker">Admin / Reports</p>
         <h1>Executive Reports Center</h1>
         <p class="muted">Live operational analytics for user growth, hospital response, and blood request outcomes.</p>
       </div>
 
-      <div class="hero-actions">
+      <div class="hero-actions admin-links">
         <a routerLink="/admin-dashboard" class="chip">Dashboard</a>
         <a routerLink="/admin/users" class="chip">Users</a>
         <a routerLink="/admin/hospitals" class="chip">Hospitals</a>
@@ -26,7 +26,7 @@
       <div class="skeleton-line w-50"></div>
     </div>
 
-    <section class="stats-grid" *ngIf="!isLoading">
+    <section class="stats-grid admin-metrics" *ngIf="!isLoading">
       <div class="card stat-card">
         <p>Total Users</p>
         <h3>{{ totalUsers }}</h3>

@@ -1,13 +1,13 @@
-<div class="hospital-inventory page-shell">
+<div class="hospital-inventory page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Hospital / Inventory</p>
         <h1>Blood Inventory Dashboard</h1>
         <p class="muted">Real-time inventory overview generated from completed request fulfillment.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/hospital/create-request" class="chip">Create Request</a>
         <a routerLink="/hospital/requests" class="chip">Requests</a>
         <a routerLink="/hospital/inventory" class="chip chip-active">Inventory</a>
@@ -15,7 +15,7 @@
       </div>
     </section>
 
-    <section class="stats-grid" *ngIf="!isLoading">
+    <section class="stats-grid auth-metrics" *ngIf="!isLoading">
       <div class="card stat-card">
         <p>Total Units</p>
         <h3>{{ totalUnits }}</h3>
@@ -37,7 +37,7 @@
       <div class="skeleton-line"></div>
     </div>
 
-    <section class="card table-wrap" *ngIf="!isLoading && inventory.length > 0">
+    <section class="card table-wrap auth-surface" *ngIf="!isLoading && inventory.length > 0">
       <h2>Blood Group Units</h2>
       <div class="table-responsive">
         <table class="data-table">

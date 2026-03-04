@@ -1,13 +1,13 @@
-<div class="donor-requests page-shell">
+<div class="donor-requests page-shell auth-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero auth-hero">
       <div>
         <p class="zone-kicker">Donor / Requests</p>
         <h1>Emergency Request Queue</h1>
         <p class="muted">Review nearby blood requests and respond quickly to save lives.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links auth-links">
         <a routerLink="/donor/donate" class="chip">Donate</a>
         <a routerLink="/donor/requests" class="chip chip-active">Requests</a>
         <a routerLink="/donor/history" class="chip">History</a>
@@ -15,7 +15,7 @@
       </div>
     </section>
 
-    <div class="card stats">
+    <div class="card stats auth-metrics">
       <p><strong>Total Available:</strong> {{ requests.length }}</p>
       <p><strong>Critical:</strong> {{ criticalCount }}</p>
     </div>
@@ -29,7 +29,7 @@
     </div>
 
     <section class="list" *ngIf="!isLoading && requests.length > 0">
-      <article class="card request-item" *ngFor="let req of requests">
+      <article class="card request-item auth-surface" *ngFor="let req of requests">
         <div>
           <h3>{{ req.hospital?.name || 'Hospital' }}</h3>
           <p class="muted">{{ req.message }}</p>

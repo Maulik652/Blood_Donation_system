@@ -15,7 +15,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 34px;
 }
 
 .hero-left {
@@ -111,9 +111,20 @@ section {
   transform: translateY(-1px);
 }
 
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .hero-right img {
-  width: min(390px, 100%);
-  filter: drop-shadow(0 24px 28px rgba(17, 24, 39, 0.08));
+  width: min(540px, 100%);
+  display: block;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(17, 24, 39, 0.12);
+  padding: 10px;
 }
 
 .section-title {
@@ -317,6 +328,15 @@ section {
   .hero-wrapper {
     flex-direction: column;
     text-align: center;
+  }
+
+  .hero-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-right img {
+    width: min(500px, 100%);
   }
 
   .hero-buttons {

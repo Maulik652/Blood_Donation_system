@@ -1,8 +1,7 @@
 .footer {
   margin-top: 56px;
-  border-top: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(8px);
+  border-top: 1px solid #dbe3ee;
+  background: #f7fafc;
   padding: 42px 0 18px;
 }
 
@@ -15,7 +14,7 @@
 
 .footer-section h3,
 .footer-section h4 {
-  color: var(--text-primary);
+  color: #1f2937;
   margin-bottom: 12px;
   font-size: 1.02rem;
   font-weight: 600;
@@ -23,7 +22,7 @@
 
 .footer-section p,
 .footer-section ul li a {
-  color: var(--text-secondary);
+  color: #4b5563;
   font-size: 0.9rem;
   text-decoration: none;
   line-height: 1.75;
@@ -43,11 +42,11 @@
 }
 
 .footer-section a:hover {
-  color: var(--primary-600);
+  color: #e53935;
 }
 
 .emergency-number {
-  color: var(--primary-600);
+  color: #e53935;
   font-size: 1.15rem;
   font-weight: 700;
 }
@@ -55,12 +54,12 @@
 .footer-bottom {
   text-align: center;
   padding-top: 16px;
-  border-top: 1px solid #eef2f7;
+  border-top: 1px solid #dbe3ee;
 }
 
 .footer-bottom p {
   margin: 0;
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 0.84rem;
 }
 

@@ -1,13 +1,13 @@
-<div class="admin-users page-shell">
+<div class="admin-users page-shell admin-page-shell">
   <div class="container">
-    <section class="card hero">
+    <section class="card hero admin-hero">
       <div>
         <p class="zone-kicker">Admin / User Management</p>
         <h1>Donor Users Control Panel</h1>
         <p class="muted">Manage all donor profiles, monitor availability, and keep your registry clean.</p>
       </div>
 
-      <div class="quick-links">
+      <div class="quick-links admin-links">
         <a routerLink="/admin-dashboard" class="chip">Overview</a>
         <a routerLink="/admin/users" class="chip chip-active">Users</a>
         <a routerLink="/admin/hospitals" class="chip">Hospitals</a>
@@ -18,7 +18,7 @@
     <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
 
-    <section class="stats-grid">
+    <section class="stats-grid admin-metrics">
       <div class="card stat-card">
         <p>Total Users</p>
         <h3>{{ pagination.total }}</h3>
@@ -33,7 +33,7 @@
       </div>
     </section>
 
-    <section class="card data-wrap">
+    <section class="card data-wrap admin-surface">
       <div class="table-head">
         <h2>Users List</h2>
         <input
